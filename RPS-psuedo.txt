@@ -1,0 +1,39 @@
+//Michael Wong
+//Will Ruiz
+//Ryan Oxford
+
+//Declare variables
+    //array for player names
+    //array for player scores
+    //roundcount = 1
+
+//Get names of the players
+//Console prompt for user input
+//Store into array
+
+//Loop iterate over each round of RPS
+//do {
+
+
+    //call method to generate RPS choice for player 1
+    //call method to generate RPS choice for player 2
+
+
+    //if (player1choice == player2choice) {
+        //result = tie
+    //} else if (player 1 wins) {
+        //scores[0]++
+    //} else {
+        //scores[1]++
+    //}
+
+
+    //write to console roundcount: RPS choices and result
+    //roundcount++
+
+//} while {neither player has score of 2} //a player hasn't won yet
+
+//if player 1 wins, write to console player 1 won
+//else write to console player 2 won
+
+//method for generating a random choice
