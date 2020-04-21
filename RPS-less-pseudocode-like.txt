@@ -1,0 +1,48 @@
+//final rock = 0;
+//final paper = 1;
+//final scissor = 2;
+
+//Names of the users
+//users = string[2];
+//console.write("Player 1 Name:");
+//users[0] = console.read();
+//console.write("Player 2 Name:");
+//users[1] = console.read();
+
+
+//score = int[2]; array for player scores
+//record = list<string[2]>; list to record results of each round
+
+
+//Each iteration would be a round of RPS
+//do {
+	//choice = int[2];
+	//choice[0] = randomChoice();
+	//choice[1] = randomChoice();
+
+
+	//if (choice[0] != choice[1]) {
+		//Comparison for who won the round
+		//if (choice[0] + 1 == choice[1] || (choice[0] == 2)) {
+			//score[1]++; player 2 wins the round
+		//} else {
+			//score[0]++; player 1 wins wins the round
+		//}
+	//}
+
+	//record.add(choice);
+
+
+//} while (score[0] < 2 && score[1] < 2)
+
+
+//if (choice[0] == 2) {
+	//console.write("{users[0] won!");
+//} else {
+	//console.write("{users[1] won!");
+//}
+//console.write(record);
+
+
+//int rps randomChoice()
+	//return r, p or s
