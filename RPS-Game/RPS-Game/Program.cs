@@ -12,8 +12,8 @@ namespace RPS_Game
         static void Main(string[] args)
         {
 
-            GameSystem newGame = new GameSystem();
-            newGame.Start();
+            GameSystem newGame = new GameSystem(); //Creates a new RPS game.
+            newGame.Start(); //Starts the game simulation.
 
         }
 

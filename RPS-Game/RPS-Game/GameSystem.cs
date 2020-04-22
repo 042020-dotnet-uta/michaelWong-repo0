@@ -27,13 +27,14 @@ namespace RPS_Game
         public int ties; //Stores number of tie rounds.
         public List<RPS[]> record; //Stores all choices of previous rounds.
 
-        public GameSystem() {
+        public GameSystem()
+        {
 
             players = new Player[2];
             roundCount = 0;
             ties = 0;
             record = new List<RPS[]>();
-            PromptPlayerNames();
+            PromptPlayerNames(); //Console prompt for player names.
 
         }
 
@@ -41,6 +42,11 @@ namespace RPS_Game
 
         #region New Methods
 
+        /*
+        Method for getting the player names.
+        Writes to console and prompts user input.
+        Uses String inputs to instantiate two Player objects.
+        */
         private void PromptPlayerNames()
         {
             //Console prompt for Player 1 name.
@@ -52,37 +58,47 @@ namespace RPS_Game
             players[1] = new Player(Console.ReadLine());
         }
 
+        /*
+        Method that starts the game simulation.
+        Simulates rounds of RPS. Ends when a player has acquired two wins.
+        RPS choices each round are randomly generated.
+        Round results are stored in this.record.
+        Console output details each round result and choices.
+        */
         public void Start()
         {
             Random rand = new Random();
 
             do
             {
-                roundCount++;
-                RPS[] choice = new RPS[2];
-                choice[0] = (RPS) rand.Next(3);
-                choice[1] = (RPS) rand.Next(3);
+                roundCount++; //Increment current round number.
+                RPS[] choice = new RPS[2]; //Stores RPS choices for each player.
+
+                //Generates a random int from {0,1,2}. Each int is typecast to RPS.
+                choice[0] = (RPS)rand.Next(3);
+                choice[1] = (RPS)rand.Next(3);
 
                 Console.Write($"Round {roundCount}: {players[0].name} chose {choice[0]}, {players[1].name} chose {choice[1]}. - ");
 
+                //Determines the result of each round from the RPS choices.
                 switch (CompareRPS(choice))
                 {
-                    case -1:
+                    case -1: //Player 2 wins.
                         players[1].wins++;
                         Console.WriteLine($"{players[1].name} Won");
                         break;
-                    case 0:
+                    case 0: //Tied round.
                         ties++;
                         Console.WriteLine($"It's a Tie");
                         break;
-                    case 1:
+                    case 1: //Player 1 wins.
                         players[0].wins++;
                         Console.WriteLine($"{players[0].name} Won");
                         break;
                 }
 
-                record.Add(choice);
-            } while (players[0].wins < 2 && players[1].wins < 2);
+                record.Add(choice); //Stores the round choices.
+            } while (players[0].wins < 2 && players[1].wins < 2); //Ends when a player acquires two wins.
 
             if (players[0].wins == 2) Console.WriteLine($"{players[0].name} Wins {players[0].wins} - {players[1].wins} With {ties} Ties.");
             else Console.WriteLine($"{players[1].name} Wins {players[1].wins} - {players[0].wins} With {ties} Ties.");
@@ -90,13 +106,15 @@ namespace RPS_Game
 
         public int CompareRPS(RPS[] choice)
         {
-            if (choice[0] == choice[1]) return 0;
-            else if ((int) choice[0] + 1 == (int) choice[1] || (int) choice[1] + 2 == (int) choice[0]) return -1;
-            else return 1;
+            if (choice[0] == choice[1]) return 0; //Tied round. Both choices are same.
+            else if ((int)choice[0] + 1 == (int)choice[1] //Checks for R - P or P - S.
+                || (int)choice[1] + 2 == (int)choice[0]) //Checks for S - R.
+                return -1; //Player 2 wins.
+            else return 1; //Player 1 wins.
         }
 
     }
-    
+
     #endregion
-    
+
 }
