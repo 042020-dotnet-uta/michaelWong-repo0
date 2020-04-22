@@ -1,4 +1,8 @@
-﻿using System;
+﻿//Michael Wong
+//Will Ruiz
+//Ryan Oxford
+
+using System;
 using System.Collections.Generic;
 
 namespace RPS_Game
@@ -53,8 +57,6 @@ namespace RPS_Game
 
             if (score[0] == 2) Console.WriteLine($"{users[0]} Wins {score[0]} - {score[1]} With {ties} Ties.");
             else Console.WriteLine($"{users[1]} Wins {score[1]} - {score[0]} With {ties} Ties.");
-
-            Console.WriteLine(record.ToString());
 
         }
 
