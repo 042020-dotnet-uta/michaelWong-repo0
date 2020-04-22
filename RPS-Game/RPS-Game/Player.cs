@@ -4,7 +4,7 @@ namespace RPS_Game
 {
     public class Player
     {
-        public String name;
+        public readonly String name;
         public int wins;
 
         public Player(String name)

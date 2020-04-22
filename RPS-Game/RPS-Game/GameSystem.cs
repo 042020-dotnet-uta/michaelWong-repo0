@@ -17,23 +17,18 @@ namespace RPS_Game
 
         #region Fields and Constructor
 
-        Player[] players;
-        public Player[] Players
-        {
-            get => players;
-            set => players = value;
-        }
+        public readonly Player[] players;
+        public readonly List<RPS[]> record; //Stores all choices of previous rounds.
         public int roundCount; //Stores current round number in the game.
         public int ties; //Stores number of tie rounds.
-        public List<RPS[]> record; //Stores all choices of previous rounds.
 
         public GameSystem()
         {
 
             players = new Player[2];
+            record = new List<RPS[]>();
             roundCount = 0;
             ties = 0;
-            record = new List<RPS[]>();
             PromptPlayerNames(); //Console prompt for player names.
 
         }
