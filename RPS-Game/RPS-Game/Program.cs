@@ -61,6 +61,9 @@ namespace RPS_Game
         /*
         Method to generate a random RPS value.
         Random int from {0, 1, 2} typecast as RPS.
+        0 - Rock
+        1 - Paper
+        2 - Scissors
         */
         static Random rand = new Random();
         static RPS GenerateRPS()
@@ -84,12 +87,12 @@ namespace RPS_Game
 
     }
 
-    //RPS values as ints.
+    //ints correspond to RPS values.
     enum RPS
     {
         rock,
         paper,
-        scissor
+        scissors
     }
 
 }
