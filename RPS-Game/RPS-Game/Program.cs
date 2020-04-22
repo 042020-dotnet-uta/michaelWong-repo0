@@ -9,6 +9,8 @@ namespace RPS_Game
         {
             String[] users = new String[2];
             int[] score = new int[2];
+            int ties = 0; //Number of ties.
+            int round = 1; //Round count.
             List<RPS[]> record = new List<RPS[]>();
             
             //Console prompt for Player 1 name.
@@ -25,28 +27,32 @@ namespace RPS_Game
                 choice[0] = GenerateRPS();
                 choice[1] = GenerateRPS();
 
+                Console.Write($"Round {round}: {users[0]} chose {choice[0]}, {users[1]} choce {choice[1]}. - ");
+
                 switch(CompareRPS(choice))
                 {
                     case -1:
                         score[1]++; //Player 2 wins. Increment score.
-                        Console.WriteLine($"{choice[0]} - {choice[1]} ! {users[1]} Wins");
+                        Console.WriteLine($"{users[1]} Won");
                         break;
                     case 0:
-                        Console.WriteLine($"{choice[0]} - {choice[1]} ! It's a Tie");
+                        ties++;
+                        Console.WriteLine("It's a Tie");
                         break;
                     case 1:
                         score[0]++; //Player 1 wins. Increment score.
-                        Console.WriteLine($"{choice[0]} - {choice[1]} ! {users[0]} Wins");
+                        Console.WriteLine($"{users[0]} Won");
                         break;
                 }
 
                 record.Add(choice); //Stores RPS values.
+                round++;
 
             }
             while (score[0] < 2 && score[1] < 2);
 
-            if (score[0] == 2) Console.WriteLine($"{users[0]} Wins!");
-            else Console.WriteLine($"{users[1]} Wins!");
+            if (score[0] == 2) Console.WriteLine($"{users[0]} Wins {score[0]} - {score[1]} With {ties} Ties.");
+            else Console.WriteLine($"{users[1]} Wins {score[1]} - {score[0]} With {ties} Ties.");
 
             Console.WriteLine(record.ToString());
 
