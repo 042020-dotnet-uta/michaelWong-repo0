@@ -18,16 +18,15 @@ namespace RPS_Game
         #region Fields and Constructor
 
         public readonly Player[] players;
-        public readonly List<RPS[]> record; //Stores all choices of previous rounds.
-        public int roundCount; //Stores current round number in the game.
+        public readonly List<Round> rounds;
+        
         public int ties; //Stores number of tie rounds.
 
         public GameSystem()
         {
 
             players = new Player[2];
-            record = new List<RPS[]>();
-            roundCount = 0;
+            rounds = new List<Round>();
             ties = 0;
             PromptPlayerNames(); //Console prompt for player names.
 
@@ -57,55 +56,50 @@ namespace RPS_Game
         Method that starts the game simulation.
         Simulates rounds of RPS. Ends when a player has acquired two wins.
         RPS choices each round are randomly generated.
-        Round results are stored in this.record.
         Console output details each round result and choices.
         */
         public void Start()
         {
             Random rand = new Random();
-
+            int n = 1;
             do
             {
-                roundCount++; //Increment current round number.
-                RPS[] choice = new RPS[2]; //Stores RPS choices for each player.
-
-                //Generates a random int from {0,1,2}. Each int is typecast to RPS.
-                choice[0] = (RPS)rand.Next(3);
-                choice[1] = (RPS)rand.Next(3);
-
-                Console.Write($"Round {roundCount}: {players[0].name} chose {choice[0]}, {players[1].name} chose {choice[1]}. - ");
-
-                //Determines the result of each round from the RPS choices.
-                switch (CompareRPS(choice))
-                {
-                    case -1: //Player 2 wins.
-                        players[1].wins++;
-                        Console.WriteLine($"{players[1].name} Won");
-                        break;
-                    case 0: //Tied round.
-                        ties++;
-                        Console.WriteLine($"It's a Tie");
-                        break;
-                    case 1: //Player 1 wins.
-                        players[0].wins++;
-                        Console.WriteLine($"{players[0].name} Won");
-                        break;
-                }
-
-                record.Add(choice); //Stores the round choices.
+                StartRound(n); //Instantiates a new Round object.
+                n++; //Increment the round number.
             } while (players[0].wins < 2 && players[1].wins < 2); //Ends when a player acquires two wins.
 
             if (players[0].wins == 2) Console.WriteLine($"{players[0].name} Wins {players[0].wins} - {players[1].wins} With {ties} Ties.");
             else Console.WriteLine($"{players[1].name} Wins {players[1].wins} - {players[0].wins} With {ties} Ties.");
         }
 
-        public int CompareRPS(RPS[] choice)
+        /* Method to instantiate and simulate a Round.
+        Outputs to console the Player RPS choices and the round outcome.
+        Stores Round object into rounds field.
+        */
+        private void StartRound(int n)
         {
-            if (choice[0] == choice[1]) return 0; //Tied round. Both choices are same.
-            else if ((int)choice[0] + 1 == (int)choice[1] //Checks for R - P or P - S.
-                || (int)choice[1] + 2 == (int)choice[0]) //Checks for S - R.
-                return -1; //Player 2 wins.
-            else return 1; //Player 1 wins.
+            Round newRound = new Round(n);
+            rounds.Add(newRound);
+
+            Console.Write($"Round {newRound.roundCount}: {players[0].name} chose {newRound.choices[0]}, {players[1].name} chose {newRound.choices[1]}. - ");
+
+            //Determines the result of each round from the RPS choices.
+            switch (newRound.result)
+            {
+                case -1: //Player 2 wins.
+                    players[1].wins++;
+                    Console.WriteLine($"{players[1].name} Won");
+                    break;
+                case 0: //Tied round.
+                    ties++;
+                    Console.WriteLine($"It's a Tie");
+                    break;
+                case 1: //Player 1 wins.
+                    players[0].wins++;
+                    Console.WriteLine($"{players[0].name} Won");
+                    break;
+            }
+
         }
 
     }
