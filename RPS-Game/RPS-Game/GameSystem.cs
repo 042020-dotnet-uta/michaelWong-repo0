@@ -19,6 +19,16 @@ namespace RPS_Game
 
         public readonly Player[] players;
         public readonly List<Round> rounds;
+        private int _roundNumber;
+        private int roundNumber
+        {
+            get
+            {
+                _roundNumber++;
+                return _roundNumber;
+            }
+        }
+        public readonly Action NewGame;
         
         public int ties; //Stores number of tie rounds.
 
@@ -28,7 +38,7 @@ namespace RPS_Game
             players = new Player[2];
             rounds = new List<Round>();
             ties = 0;
-            PromptPlayerNames(); //Console prompt for player names.
+            NewGame = (Action) PromptPlayerNames + StartGame;
 
         }
 
@@ -58,13 +68,12 @@ namespace RPS_Game
         RPS choices each round are randomly generated.
         Console output details each round result and choices.
         */
-        public void Start()
+        public void StartGame()
         {
-            int n = 1;
+            _roundNumber = 0;
             do
             {
-                StartRound(n); //Instantiates a new Round object.
-                n++; //Increment the round number.
+                StartNewRound(); //Instantiates a new Round object.
             } while (players[0].wins < 2 && players[1].wins < 2); //Ends when a player acquires two wins.
 
             if (players[0].wins == 2) Console.WriteLine($"{players[0].name} Wins {players[0].wins} - {players[1].wins} With {ties} Ties.");
@@ -76,14 +85,15 @@ namespace RPS_Game
         Outputs to console the Player RPS choices and the round outcome.
         Stores Round object into rounds field.
         */
-        private void StartRound(int n)
+        private void StartNewRound()
         {
-            Round newRound = new Round(n);
+
+            Round newRound = new Round(roundNumber);
             rounds.Add(newRound);
+            newRound.StartRound();
 
             Console.Write($"Round {newRound.roundCount}: {players[0].name} chose {newRound.choices[0]}, {players[1].name} chose {newRound.choices[1]}. - ");
-
-            //Determines the result of each round from the RPS choices.
+            
             switch (newRound.result)
             {
                 case -1: //Player 2 wins.
@@ -101,6 +111,7 @@ namespace RPS_Game
             }
 
         }
+
 
     }
 
