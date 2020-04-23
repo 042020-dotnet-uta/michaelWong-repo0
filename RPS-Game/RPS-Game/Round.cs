@@ -22,21 +22,16 @@ namespace RPS_Game
             }
         }
 
-        /*
-        public enum RPS
-        {
-            rock,
-            paper,
-            scissors
-        }
-        */
-
         public Round(int n)
         {
             roundCount = n;
             StartRound = (Action) GenerateRPS + (Action) CompareRPS;
         }
 
+        /*
+        Method to generate the RPS choices for each player.
+        Randomly assigns rock, paper or scissor to each player.
+        */
         private void GenerateRPS() 
         {
             choices = new RPS[] { (RPS) random.Next(3), (RPS) random.Next(3) };
@@ -44,7 +39,7 @@ namespace RPS_Game
 
         /*
         Method to determine the result of the round.
-        Returns an int to represent the result.
+        Assigns an int to represent the result.
         1: Player 1 wins.
         0: Both players tie.
         -1: Player 2 wins.

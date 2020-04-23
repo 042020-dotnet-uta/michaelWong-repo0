@@ -38,7 +38,7 @@ namespace RPS_Game
             players = new Player[2];
             rounds = new List<Round>();
             ties = 0;
-            NewGame = (Action) PromptPlayerNames + StartGame;
+            NewGame = (Action) ( () => Console.WriteLine("Starting New Game!\n") ) + (Action) PromptPlayerNames + StartGame;
 
         }
 
@@ -64,26 +64,28 @@ namespace RPS_Game
 
         /*
         Method that starts the game simulation.
-        Simulates rounds of RPS. Ends when a player has acquired two wins.
-        RPS choices each round are randomly generated.
-        Console output details each round result and choices.
+        Game ends once a player has two round wins.
+        Generates new rounds and starts the round.
+        Console game output details once a player has won.
         */
         public void StartGame()
         {
+            Console.WriteLine();
             _roundNumber = 0;
             do
             {
                 StartNewRound(); //Instantiates a new Round object.
             } while (players[0].wins < 2 && players[1].wins < 2); //Ends when a player acquires two wins.
 
-            if (players[0].wins == 2) Console.WriteLine($"{players[0].name} Wins {players[0].wins} - {players[1].wins} With {ties} Ties.");
-            else Console.WriteLine($"{players[1].name} Wins {players[1].wins} - {players[0].wins} With {ties} Ties.");
+            if (players[0].wins == 2) Console.WriteLine($"\n{players[0].name} Wins {players[0].wins} - {players[1].wins} With {ties} Ties.");
+            else Console.WriteLine($"\n{players[1].name} Wins {players[1].wins} - {players[0].wins} With {ties} Ties.");
         }
 
         /*
-        Method to instantiate and simulate a Round.
-        Outputs to console the Player RPS choices and the round outcome.
+        Method to create a new round.
         Stores Round object into rounds field.
+        Starts the round.
+        Outputs to console the Player RPS choices and the round outcome.
         */
         private void StartNewRound()
         {
@@ -91,10 +93,20 @@ namespace RPS_Game
             Round newRound = new Round(roundNumber);
             rounds.Add(newRound);
             newRound.StartRound();
-
-            Console.Write($"Round {newRound.roundCount}: {players[0].name} chose {newRound.choices[0]}, {players[1].name} chose {newRound.choices[1]}. - ");
             
-            switch (newRound.result)
+            PrintResult(newRound);
+
+        }
+
+        /*
+        Method to print the round details.
+        Round N: X chose RPS, Y chose RPS - {result}
+        */
+        private void PrintResult(Round round)
+        {
+            Console.Write($"Round {round.roundCount}: {players[0].name} chose {round.choices[0]}, {players[1].name} chose {round.choices[1]}. - ");
+            
+            switch (round.result)
             {
                 case -1: //Player 2 wins.
                     players[1].wins++;
@@ -109,7 +121,6 @@ namespace RPS_Game
                     Console.WriteLine($"{players[0].name} Won");
                     break;
             }
-
         }
 
 
