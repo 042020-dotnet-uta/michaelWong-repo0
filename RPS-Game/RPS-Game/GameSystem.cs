@@ -60,7 +60,6 @@ namespace RPS_Game
         */
         public void Start()
         {
-            Random rand = new Random();
             int n = 1;
             do
             {
@@ -72,7 +71,8 @@ namespace RPS_Game
             else Console.WriteLine($"{players[1].name} Wins {players[1].wins} - {players[0].wins} With {ties} Ties.");
         }
 
-        /* Method to instantiate and simulate a Round.
+        /*
+        Method to instantiate and simulate a Round.
         Outputs to console the Player RPS choices and the round outcome.
         Stores Round object into rounds field.
         */

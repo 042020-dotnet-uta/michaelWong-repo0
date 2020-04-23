@@ -10,6 +10,15 @@ namespace RPS_Game
         public readonly int roundCount;
         public readonly int result;
 
+        /*
+        public enum RPS
+        {
+            rock,
+            paper,
+            scissors
+        }
+        */
+
         public Round(int n)
         {
             choices = new RPS[] { (RPS) random.Next(3), (RPS) random.Next(3) };
