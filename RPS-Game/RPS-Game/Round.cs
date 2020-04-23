@@ -5,6 +5,11 @@ namespace RPS_Game
 
     public class Round
     {
+        /*
+        Round Class for each round that occurs in a game.
+        Use StartRound method after the round is instantiated to start the round (generates RPS choices and result).
+        */
+
         private static Random random = new Random();
         public RPS[] choices;
         public readonly int roundCount;

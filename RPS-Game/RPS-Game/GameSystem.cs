@@ -4,7 +4,12 @@ using System.Collections.Generic;
 namespace RPS_Game
 {
 
-    //ints correspond to RPS values.
+    /*
+    RPS values.
+    0 - rock
+    1 - paper
+    2 - scissor
+    */
     public enum RPS
     {
         rock,
@@ -14,6 +19,14 @@ namespace RPS_Game
 
     public class GameSystem
     {
+
+        /*
+        Class GameSystem for a game of RPS.
+        After instantiated, use NewGame() to start a new game.
+        Console prompt for player names input.
+        Wins required to win the game of RPS is 2.
+        Outputs to console.
+        */
 
         #region Fields and Constructor
 
