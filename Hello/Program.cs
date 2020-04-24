@@ -1,36 +1,56 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Hello
 {
-
-    public delegate int Del(String message);
     
     class Program
     {
 
-        public static void Main(string[] args)
+        public delegate void StringDelegate(String message, out String outMessage);
+
+        public static void Main(String[] args)
         {
-            Del print = (String message) =>
+
+            Console.WriteLine("Awaiting User Input...");
+            String message = "";
+            message = Console.ReadLine();
+            Console.WriteLine();
+
+            StringDelegate PrintMessage = (String message, out String outMessage) => 
             {
-                Console.WriteLine("1: " + message);
-                return 0;
+                Console.WriteLine(message);
+                outMessage = message;
             };
 
-            Del printMore = (String message) =>
+            StringDelegate CountLength = (String message, out String outMessage) => 
             {
-                Console.WriteLine("2: I am the delegate.");
-                return 1;
+                outMessage = message + $" is {message.Length} characters long.";
+                Console.WriteLine(outMessage);
             };
 
-            Del printing = (String message) =>
+            StringDelegate AppendMessage = (String message, out String outMessage) => 
             {
-                Console.WriteLine("3: I am printing.");
-                return 2;
+                Console.WriteLine("Appended Message");
+                outMessage = message + " Appended";
             };
 
-            Del allDelegates = print + printMore + printing;
-            Console.WriteLine(allDelegates);
-            
+            List<StringDelegate> delegates = new List<StringDelegate>();
+            delegates.Add(PrintMessage);
+            delegates.Add(CountLength);
+            delegates.Add(AppendMessage);
+            delegates.Add(PrintMessage);
+            delegates.Add(AppendMessage);
+            delegates.Add(CountLength);
+            delegates.Add(AppendMessage);
+
+            foreach (StringDelegate stringDel in delegates)
+            {
+                stringDel(message, out message);
+            }
+
         }
+
     }
+
 }
