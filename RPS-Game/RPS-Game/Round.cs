@@ -13,7 +13,7 @@ namespace RPS_Game
         private static Random random = new Random();
         public RPS[] choices;
         public readonly int roundCount;
-        public readonly Action StartRound;
+        public readonly Action Run;
         private int _result;
         public int result
         {
@@ -30,7 +30,7 @@ namespace RPS_Game
         public Round(int n)
         {
             roundCount = n;
-            StartRound = (Action) GenerateRPS + (Action) CompareRPS;
+            Run = (Action) GenerateRPS + (Action) CompareRPS;
         }
 
         /*

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 namespace RPS_Game
 {
@@ -22,7 +23,7 @@ namespace RPS_Game
 
         /*
         Class GameSystem for a game of RPS.
-        After instantiated, use NewGame() to start a new game.
+        After instantiated, use Run() to start a new game.
         Console prompt for player names input.
         Wins required to win the game of RPS is 2.
         Outputs to console.
@@ -41,17 +42,27 @@ namespace RPS_Game
                 return _roundNumber;
             }
         }
-        public readonly Action NewGame;
-        
         public int ties; //Stores number of tie rounds.
+        public readonly Action Run;
 
-        public GameSystem()
+        //Logger
+        private readonly ILogger _logger;
+
+        public GameSystem(ILogger<GameSystem> logger)
         {
 
             players = new Player[2];
             rounds = new List<Round>();
             ties = 0;
-            NewGame = (Action) ( () => Console.WriteLine("Starting New Game!\n") ) + (Action) PromptPlayerNames + StartGame;
+            Run = () =>
+            {
+                Console.WriteLine("Starting New Game!\n");
+                PromptPlayerNames();
+                StartGame();
+            };
+
+            //Inject the Logging Service
+            _logger = logger;
 
         }
 
@@ -73,6 +84,8 @@ namespace RPS_Game
             //Console prompt for Player 2 name.
             Console.Write("Player 2 Name: ");
             players[1] = new Player(Console.ReadLine());
+
+            Console.WriteLine($"Player names are: {players[0].name} | {players[1].name}\n");
         }
 
         /*
@@ -83,15 +96,15 @@ namespace RPS_Game
         */
         public void StartGame()
         {
-            Console.WriteLine();
             _roundNumber = 0;
             do
             {
-                StartNewRound(); //Instantiates a new Round object.
+                RunNewRound(); //Instantiates a new Round object.
             } while (players[0].wins < 2 && players[1].wins < 2); //Ends when a player acquires two wins.
 
             if (players[0].wins == 2) Console.WriteLine($"\n{players[0].name} Wins {players[0].wins} - {players[1].wins} With {ties} Ties.");
             else Console.WriteLine($"\n{players[1].name} Wins {players[1].wins} - {players[0].wins} With {ties} Ties.");
+            _logger.LogInformation($"{players[0].wins} - {players[1].wins} - {ties}");
         }
 
         /*
@@ -100,12 +113,12 @@ namespace RPS_Game
         Starts the round.
         Outputs to console the Player RPS choices and the round outcome.
         */
-        private void StartNewRound()
+        private void RunNewRound()
         {
 
             Round newRound = new Round(roundNumber);
             rounds.Add(newRound);
-            newRound.StartRound();
+            newRound.Run();
             
             PrintResult(newRound);
 
@@ -117,23 +130,25 @@ namespace RPS_Game
         */
         private void PrintResult(Round round)
         {
-            Console.Write($"Round {round.roundCount}: {players[0].name} chose {round.choices[0]}, {players[1].name} chose {round.choices[1]}. - ");
+            String output = $"Round {round.roundCount}: {players[0].name} chose {round.choices[0]}, {players[1].name} chose {round.choices[1]}. - ";
             
             switch (round.result)
             {
                 case -1: //Player 2 wins.
                     players[1].wins++;
-                    Console.WriteLine($"{players[1].name} Won");
+                    output += $"{players[1].name} Won";
                     break;
                 case 0: //Tied round.
                     ties++;
-                    Console.WriteLine($"It's a Tie");
+                    output += $"It's a Tie";
                     break;
                 case 1: //Player 1 wins.
                     players[0].wins++;
-                    Console.WriteLine($"{players[0].name} Won");
+                    output += $"{players[0].name} Won";
                     break;
             }
+
+            Console.WriteLine(output);
         }
 
 

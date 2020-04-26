@@ -2,8 +2,10 @@
 //Will Ruiz
 //Ryan Oxford
 
-using System;
-using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace RPS_Game
 {
@@ -12,8 +14,13 @@ namespace RPS_Game
         static void Main(string[] args)
         {
 
-            GameSystem newGame = new GameSystem(); //Creates a new RPS game.
-            newGame.NewGame(); //Starts the game simulation.
+            var services = new ServiceCollection().AddLogging(logging => logging.AddConsole())
+                .AddTransient<GameSystem>();
+            using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+            {
+                GameSystem newGame = serviceProvider.GetService<GameSystem>(); //Creates a new RPS game.
+                newGame.Run(); //Starts the game simulation.
+            }
 
         }
 
