@@ -8,9 +8,9 @@ namespace CustomerApplication
     {
         #region Fields
         [Key]
-        public long id {get; private set;}
+        public long ID {get; private set;}
         private String _name;
-        public String name
+        public String Name
         {
             get
             {
@@ -26,10 +26,10 @@ namespace CustomerApplication
 
         #region Constructors
         public Location(){}
-        public Location(long _id, String _str)
+        public Location(long id, String name)
         {
-            id = _id;
-            name = _str;
+            ID = id;
+            Name = name;
         }
         #endregion
 
