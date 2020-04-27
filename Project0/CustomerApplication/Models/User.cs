@@ -1,4 +1,6 @@
 using System;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace CustomerApplication
@@ -6,10 +8,11 @@ namespace CustomerApplication
     public abstract class User
     {
         #region Fields
-        private static Regex rx = new Regex(@"^([^\W\d]|\s)+$");
-        public readonly String id;
+        private static Regex Rx = new Regex(@"^([^\W\d]|\s)+$");
+        [Key]
+        public long ID{get;}
         private String _firstName;
-        public String firstName
+        public String FirstName
         {
             get
             {
@@ -17,12 +20,12 @@ namespace CustomerApplication
             }
             private set
             {
-                if (rx.IsMatch(value)) _firstName = value.Trim();
+                if (Rx.IsMatch(value)) _firstName = value.Trim();
                 else throw new FormatException("Invalid first name input.");
             }
         }
         private String _lastName;
-        public String lastName
+        public String LastName
         {
             get
             {
@@ -30,32 +33,34 @@ namespace CustomerApplication
             }
             private set
             {
-                if (rx.IsMatch(value)) _lastName = value.Trim();
+                if (Rx.IsMatch(value)) _lastName = value.Trim();
                 else throw new FormatException("Invalid last name input.");
             }
         }
+        private String Password{get;set;}
         #endregion
 
         #region Constructors
-        public User(String _first, String _last, String _id)
+        public User(){}
+        public User(String first, String last, long id)
         {
-            firstName = _first;
-            lastName = _last;
-            id = _id;
+            FirstName = first;
+            LastName = last;
+            ID = id;
         }
         #endregion
 
         #region Methods
         public override String ToString()
         {
-            return $"Name:\t\t{firstName} {lastName}\n" +
-                $"User ID:\t{id}";
+            return $"Name:\t\t{FirstName} {LastName}\n" +
+                $"User ID:\t{ID}";
         }
-        public String ChangeFirstName(String _first)
+        public String ChangeFirstName(String first)
         {
             try
             {
-                firstName = _first;
+                FirstName = first;
             }
             catch (FormatException)
             {
@@ -63,11 +68,11 @@ namespace CustomerApplication
             }
             return "Successfully changed first name.";
         }
-        public String ChangeLastName(String _last)
+        public String ChangeLastName(String last)
         {
             try
             {
-                lastName = _last;
+                LastName = last;
             }
             catch (FormatException)
             {

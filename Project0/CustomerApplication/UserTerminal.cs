@@ -5,7 +5,7 @@ namespace CustomerApplication
     public class UserTerminal
     {
         #region Fields
-        private User user;
+        //private User user;
         #endregion
 
         #region Constructors

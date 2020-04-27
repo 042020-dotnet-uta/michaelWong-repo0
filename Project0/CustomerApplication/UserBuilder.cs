@@ -116,10 +116,10 @@ namespace CustomerApplication
             {
                 case "admin":
                     //TODO: save password
-                    return new Admin(firstName, lastName, "7492837124");
+                    return new Admin(firstName, lastName, 7492837124);
                 default:
                     //TODO: save password
-                    return new Customer(firstName, lastName, "7492837124");
+                    return new Customer(firstName, lastName, 7492837124);
             }
         }
         #endregion

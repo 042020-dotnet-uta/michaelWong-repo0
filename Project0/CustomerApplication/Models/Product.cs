@@ -1,13 +1,17 @@
 using System;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CustomerApplication
 {
     public class Product
     {
         #region Fields
-        public readonly String id;
+        [Key]
+        public long ID{get;}
         private String _name;
-        public String name
+        public String Name
         {
             get
             {
@@ -19,7 +23,7 @@ namespace CustomerApplication
             }
         }
         private String _price;
-        public String price
+        public String Price
         {
             get
             {
@@ -30,10 +34,11 @@ namespace CustomerApplication
                 _price = value;
             }
         }
-        public readonly String locationID;
+        [ForeignKey("Location")]
+        public long LocationID{get;}
         //public readonly String[] tags;
         private int _quantity;
-        public int quantity
+        public int Quantity
         {
             get
             {
@@ -47,20 +52,21 @@ namespace CustomerApplication
         #endregion
 
         #region Constructors
-        public Product(String productID, String _locationID, String productName, String productPrice, int productQuantity)
+        public Product(){}
+        public Product(long productID, long locationID, String productName, String productPrice, int productQuantity)
         {
-            id = productID;
-            locationID = _locationID;
-            name = productName;
-            price = productPrice;
-            quantity = productQuantity;
+            ID = productID;
+            LocationID = locationID;
+            Name = productName;
+            Price = productPrice;
+            Quantity = productQuantity;
         }
         #endregion
 
         #region Methods
         public override String ToString()
         {
-            return $"{id}: {name} - ${price}";
+            return $"{ID}: {Name} - ${Price}";
         }
         #endregion
     }

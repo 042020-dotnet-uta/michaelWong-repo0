@@ -1,23 +1,25 @@
 using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomerApplication
 {
-    public class Admin: User
+    public class Customer: User
     {
         #region Fields
         #endregion
 
         #region Constructors
-        public Admin(String _first, String _last, String _id) : base(_first, _last, _id)
+        public Customer() : base(){}
+        public Customer(String first, String last, long id) : base(first, last, id)
         {
 
         }
         #endregion
-        
+
         #region Methods
         public override String ToString()
         {
-            return "User Type:\tAdmin\n"
+            return "User Type:\tCustomer\n"
                 + base.ToString();
         }
         #endregion

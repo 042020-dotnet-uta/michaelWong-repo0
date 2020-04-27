@@ -1,13 +1,15 @@
 using System;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace CustomerApplication
 {
     public class Location
     {
         #region Fields
-        private static Regex rx;
-        public readonly String id;
+        [Key]
+        public long id {get;set;}
         private String _name;
         public String name
         {
@@ -17,14 +19,14 @@ namespace CustomerApplication
             }
             private  set
             {
-                if(rx.IsMatch(value.Trim()))
-                _name = value.Trim();
+                _name = value;
             }
         }
         #endregion
 
         #region Constructors
-        public Location(String _id, String _str)
+        public Location(){}
+        public Location(long _id, String _str)
         {
             id = _id;
             name = _str;

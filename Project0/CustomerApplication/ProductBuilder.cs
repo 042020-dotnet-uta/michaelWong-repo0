@@ -34,13 +34,13 @@ namespace CustomerApplication
                 else throw new FormatException("Invalid product price input. Format: X.XX");
             }
         }
-        private String locationID;
+        private long locationID{get;set;}
         #endregion
 
         #region Constructor
-        public ProductBuilder(String _locationID)
+        public ProductBuilder(long _location)
         {
-            locationID = _locationID;
+            locationID = _location;
         }
         #endregion
 
@@ -50,7 +50,7 @@ namespace CustomerApplication
             Console.WriteLine("Creating a new product:\n");
             NameInput();
             PriceInput();
-            return new Product("923748902734", locationID, name, price, 0); 
+            return new Product(923748902734, locationID, name, price, 0); 
         }
 
         public String NameInput()

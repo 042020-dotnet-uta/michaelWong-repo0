@@ -6,8 +6,8 @@ namespace CustomerApplication
     {
         static void Main(string[] args)
         {
-            Console.Clear();
-            new Login().PromptLogin();
+            new Admin();
+            new Customer();
         }
     }
 }
