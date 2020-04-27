@@ -7,8 +7,7 @@ namespace CustomerApplication
         static void Main(string[] args)
         {
             Console.Clear();
-            User user = new UserBuilder().BuildUser("Customer");
-            Console.WriteLine(user);
+            Console.WriteLine(new ProductBuilder("23948293").BuildProduct());
         }
     }
 }

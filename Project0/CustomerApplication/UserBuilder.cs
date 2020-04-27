@@ -47,13 +47,18 @@ namespace CustomerApplication
                 else throw new FormatException("Invalid password input. Must be at least 8 Latin alphabet characters or Arabic numbers.");
             }
         }
+        private String type;
         #endregion
 
-        #region Constructors
+        #region Constructor
+        public UserBuilder(String _type)
+        {
+            type = _type;
+        }
         #endregion
         
         #region Methods
-        public User BuildUser(String type)
+        public User BuildUser()
         {
             Console.WriteLine("Creating a new user:");
             bool check = true;
@@ -106,7 +111,16 @@ namespace CustomerApplication
             } while (check);
 
             Console.WriteLine();
-            return new Customer(firstName, lastName, "924578093");
+            
+            switch(type)
+            {
+                case "admin":
+                    //TODO: save password
+                    return new Admin(firstName, lastName, "7492837124");
+                default:
+                    //TODO: save password
+                    return new Customer(firstName, lastName, "7492837124");
+            }
         }
         #endregion
     }
