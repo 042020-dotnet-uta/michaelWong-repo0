@@ -1,16 +1,16 @@
 using System;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace CustomerApplication
 {
-    public abstract class User
+    public class User
     {
         #region Fields
         private static Regex Rx = new Regex(@"^([^\W\d]|\s)+$");
         [Key]
-        public long ID{get;}
+        public long ID{get; private set;}
         private String _firstName;
         public String FirstName
         {
@@ -37,16 +37,19 @@ namespace CustomerApplication
                 else throw new FormatException("Invalid last name input.");
             }
         }
-        private String Password{get;set;}
+        public String Password{get; private set;}
+        public String Type{get; private set;}
+        //public ICollection<Order> Orders{get;}
         #endregion
 
         #region Constructors
         public User(){}
-        public User(String first, String last, long id)
+        public User(String first, String last, long id, String type)
         {
             FirstName = first;
             LastName = last;
             ID = id;
+            Type = type;
         }
         #endregion
 

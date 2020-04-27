@@ -10,7 +10,7 @@ namespace CustomerApplication
 
         #region Constructors
         public Admin() : base(){}
-        public Admin(String first, String last, long id) : base(first, last, id){}
+        public Admin(String first, String last, long id) : base(first, last, id, "admin"){}
         #endregion
         
         #region Methods

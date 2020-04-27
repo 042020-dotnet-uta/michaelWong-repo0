@@ -10,10 +10,7 @@ namespace CustomerApplication
 
         #region Constructors
         public Customer() : base(){}
-        public Customer(String first, String last, long id) : base(first, last, id)
-        {
-
-        }
+        public Customer(String first, String last, long id) : base(first, last, id, "customer"){}
         #endregion
 
         #region Methods

@@ -1,5 +1,5 @@
 using System;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,7 +9,7 @@ namespace CustomerApplication
     {
         #region Fields
         [Key]
-        public long ID{get;}
+        public long ID{get; private set;}
         private String _name;
         public String Name
         {
@@ -34,9 +34,6 @@ namespace CustomerApplication
                 _price = value;
             }
         }
-        [ForeignKey("Location")]
-        public long LocationID{get;}
-        //public readonly String[] tags;
         private int _quantity;
         public int Quantity
         {
@@ -49,6 +46,11 @@ namespace CustomerApplication
                 _quantity = value;
             }
         }
+        [ForeignKey("Location")]
+        public long LocationID{get;private set;}
+        public Location Location {get;}
+        //public ICollection<Order> Orders{get;}
+        //public readonly String[] tags;
         #endregion
 
         #region Constructors

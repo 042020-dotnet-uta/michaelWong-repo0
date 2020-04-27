@@ -1,6 +1,5 @@
 using System;
-using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace CustomerApplication
@@ -9,7 +8,7 @@ namespace CustomerApplication
     {
         #region Fields
         [Key]
-        public long id {get;set;}
+        public long id {get; private set;}
         private String _name;
         public String name
         {
@@ -22,6 +21,7 @@ namespace CustomerApplication
                 _name = value;
             }
         }
+        //public ICollection<Product> Products{get;}
         #endregion
 
         #region Constructors

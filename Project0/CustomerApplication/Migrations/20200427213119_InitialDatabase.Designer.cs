@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerApplication.Migrations
 {
     [DbContext(typeof(CustomerApplicationContext))]
-    [Migration("20200427201809_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20200427213119_InitialDatabase")]
+    partial class InitialDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,48 +20,6 @@ namespace CustomerApplication.Migrations
                 .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CustomerApplication.Admin", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("firstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("lastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Admins");
-                });
-
-            modelBuilder.Entity("CustomerApplication.Customer", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("firstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("lastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Customers");
-                });
 
             modelBuilder.Entity("CustomerApplication.Location", b =>
                 {
@@ -85,20 +43,17 @@ namespace CustomerApplication.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("customerID")
+                    b.Property<long>("ProductID")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("locationID")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("productID")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("quantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
+
+                    b.Property<long>("UserID")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ID");
 
@@ -112,18 +67,45 @@ namespace CustomerApplication.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("name")
+                    b.Property<long>("LocationID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("price")
+                    b.Property<string>("Price")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("quantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("CustomerApplication.User", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }
