@@ -6,10 +6,10 @@ namespace CustomerApplication
     public class UserBuilder
     {
         #region Fields
-        private static Regex nameRx = new Regex(@"^([^\W\d]|\s)+$");
-        private static Regex passwordRx = new Regex(@"^[\p{Lu}\p{Ll}\p{Nd}]{8,}$");
+        private static Regex NameRx = new Regex(@"^([^\W\d]|\s)+$");
+        private static Regex PasswordRx = new Regex(@"^[\p{Lu}\p{Ll}\p{Nd}]{8,}$");
         private String _firstName;
-        private String firstName
+        private String FirstName
         {
             get
             {
@@ -17,12 +17,12 @@ namespace CustomerApplication
             }
             set
             {
-                if (nameRx.IsMatch(value.Trim())) _firstName = value.Trim();
+                if (NameRx.IsMatch(value.Trim())) _firstName = value.Trim();
                 else throw new FormatException("Invalid first name input.");
             }
         }
         private String _lastName;
-        private String lastName
+        private String LastName
         {
             get
             {
@@ -30,12 +30,12 @@ namespace CustomerApplication
             }
             set
             {
-                if (nameRx.IsMatch(value.Trim())) _lastName = value.Trim();
+                if (NameRx.IsMatch(value.Trim())) _lastName = value.Trim();
                 else throw new FormatException("Invalid last name input.");
             }
         }
         private String _password;
-        private String password
+        private String Password
         {
             get
             {
@@ -43,17 +43,17 @@ namespace CustomerApplication
             }
             set
             {
-                if (passwordRx.IsMatch(value)) _password = value;
+                if (PasswordRx.IsMatch(value)) _password = value;
                 else throw new FormatException("Invalid password input. Must be at least 8 Latin alphabet characters or Arabic numbers.");
             }
         }
-        private String type;
+        private String Type;
         #endregion
 
         #region Constructor
-        public UserBuilder(String _type)
+        public UserBuilder(String type)
         {
-            type = _type;
+            Type = type;
         }
         #endregion
         
@@ -68,7 +68,7 @@ namespace CustomerApplication
                 {
                     Console.WriteLine("\nEnter First Name:");
                     String str = Console.ReadLine();
-                    firstName = str;
+                    FirstName = str;
                     check = false;
                 }
                 catch (Exception ex)
@@ -84,7 +84,7 @@ namespace CustomerApplication
                 {
                     Console.WriteLine("\nEnter Last Name:");
                     String str = Console.ReadLine();
-                    lastName = str;
+                    LastName = str;
                     check = false;
                 }
                 catch (Exception ex)
@@ -100,7 +100,7 @@ namespace CustomerApplication
                 {
                     Console.WriteLine("\nEnter Password:");
                     String str = Console.ReadLine();
-                    password = str;
+                    Password = str;
                     check = false;
                 }
                 catch (Exception ex)
@@ -112,14 +112,14 @@ namespace CustomerApplication
 
             Console.WriteLine();
             
-            switch(type)
+            switch(Type)
             {
                 case "admin":
                     //TODO: save password
-                    return new Admin(firstName, lastName, 7492837124);
+                    return new Admin(FirstName, LastName, 7492837124);
                 default:
                     //TODO: save password
-                    return new Customer(firstName, lastName, 7492837124);
+                    return new Customer(FirstName, LastName, 7492837124);
             }
         }
         #endregion

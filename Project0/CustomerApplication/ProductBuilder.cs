@@ -6,10 +6,10 @@ namespace CustomerApplication
     public class ProductBuilder
     {
         #region Fields
-        private static Regex priceRx = new Regex(@"^\d+\.\d{2}$");
-        private static Regex nameRx = new Regex(@"^[\w\s]+$");
+        private static Regex PriceRx = new Regex(@"^\d+\.\d{2}$");
+        private static Regex NameRx = new Regex(@"^[\w\s]+$");
         private String _name;
-        private String name
+        private String Name
         {
             get
             {
@@ -17,12 +17,12 @@ namespace CustomerApplication
             }
             set
             {
-                if (nameRx.IsMatch(value.Trim())) _name = value.Trim();
+                if (NameRx.IsMatch(value.Trim())) _name = value.Trim();
                 else throw new FormatException("Invalid product name input.");
             }
         }
         private String _price;
-        private String price
+        private String Price
         {
             get
             {
@@ -30,17 +30,17 @@ namespace CustomerApplication
             }
             set
             {
-                if (priceRx.IsMatch(value)) _price = value;
+                if (PriceRx.IsMatch(value)) _price = value;
                 else throw new FormatException("Invalid product price input. Format: X.XX");
             }
         }
-        private long locationID{get;set;}
+        private long LocationID{get;}
         #endregion
 
         #region Constructor
-        public ProductBuilder(long _location)
+        public ProductBuilder(long locationID)
         {
-            locationID = _location;
+            LocationID = locationID;
         }
         #endregion
 
@@ -50,7 +50,7 @@ namespace CustomerApplication
             Console.WriteLine("Creating a new product:\n");
             NameInput();
             PriceInput();
-            return new Product(923748902734, locationID, name, price, 0); 
+            return new Product(923748902734, LocationID, Name, Price, 0); 
         }
 
         public String NameInput()
@@ -61,7 +61,7 @@ namespace CustomerApplication
                 try
                 {
                     Console.WriteLine("Enter Product Name:");
-                    name = Console.ReadLine();
+                    Name = Console.ReadLine();
                     check = false;
                 }
                 catch (Exception ex)
@@ -70,7 +70,7 @@ namespace CustomerApplication
                 }
             } while (check);
             Console.WriteLine();
-            return name;
+            return Name;
         }
 
         public String PriceInput()
@@ -81,7 +81,7 @@ namespace CustomerApplication
                 try
                 {
                     Console.WriteLine("Enter Product Price:");
-                    price = Console.ReadLine();
+                    Price = Console.ReadLine();
                     check = false;
                 }
                 catch (Exception ex)
@@ -90,7 +90,7 @@ namespace CustomerApplication
                 }
             } while (check);
             Console.WriteLine();
-            return price;
+            return Price;
         }
         #endregion
     }
