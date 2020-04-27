@@ -7,7 +7,7 @@ namespace CustomerApplication
         static void Main(string[] args)
         {
             Console.Clear();
-            Console.WriteLine(new ProductBuilder("23948293").BuildProduct());
+            new Login().PromptLogin();
         }
     }
 }
