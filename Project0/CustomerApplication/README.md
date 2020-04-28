@@ -1,7 +1,3 @@
-Finished:
-User
-Customer
-Admin
-UserBuilder
-ProductBuilder
-Login
+TODO:
+redo productbuilder
+admin and customer classes

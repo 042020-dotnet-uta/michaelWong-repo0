@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace CustomerApplication
 {
@@ -16,16 +19,16 @@ namespace CustomerApplication
             String password = Console.ReadLine();
             //Send id and password to the database to see if user login is correct
             //Users[] users = db.query something
-            User[] users = new User[] { };
-            if (users.Length != 0)
+            using(var db = new CustomerApplicationContext())
             {
-                Console.WriteLine("Log in successful.\n");
-                return users[0];
-            }
-            else
-            {
-                Console.WriteLine("Log in failed.\n");
-                return null;
+                try
+                {
+                    return db.Users.Single(u => u.ID == Int64.Parse(id) && u.Password == password);
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
         #endregion

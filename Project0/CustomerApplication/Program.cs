@@ -6,8 +6,8 @@ namespace CustomerApplication
     {
         static void Main(string[] args)
         {
-            new Admin();
-            new Customer();
+            UserTerminal ui = new UserTerminal();
+            new UserBuilder().BuildUser("admin");
         }
     }
 }

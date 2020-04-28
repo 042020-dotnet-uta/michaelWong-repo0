@@ -47,80 +47,50 @@ namespace CustomerApplication
                 else throw new FormatException("Invalid password input. Must be at least 8 Latin alphabet characters or Arabic numbers.");
             }
         }
-        private String Type;
         #endregion
 
-        #region Constructor
-        public UserBuilder(String type)
-        {
-            Type = type;
-        }
-        #endregion
-        
         #region Methods
         public User BuildUser()
         {
-            Console.WriteLine("Creating a new user:");
-            bool check = true;
-            do
-            {
-                try
-                {
-                    Console.WriteLine("\nEnter First Name:");
-                    String str = Console.ReadLine();
-                    FirstName = str;
-                    check = false;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    check = true;
-                }
-            } while (check);
+            return this.BuildUser("customer");
+        }
 
-            do
+        public User BuildUser(String type)
+        {
+            Console.WriteLine("Creating a New User:");
+            try
             {
-                try
-                {
-                    Console.WriteLine("\nEnter Last Name:");
-                    String str = Console.ReadLine();
-                    LastName = str;
-                    check = false;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    check = true;
-                }
-            } while (check);
-
-            do
-            {
-                try
-                {
-                    Console.WriteLine("\nEnter Password:");
-                    String str = Console.ReadLine();
-                    Password = str;
-                    check = false;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    check = true;
-                }
-            } while (check);
-
-            Console.WriteLine();
-            
-            switch(Type)
-            {
-                case "admin":
-                    //TODO: save password
-                    return new Admin(FirstName, LastName, 7492837124);
-                default:
-                    //TODO: save password
-                    return new Customer(FirstName, LastName, 7492837124);
+                FirstNameInput();
+                LastNameInput();
+                PasswordInput();
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            return new User(FirstName, LastName, type, Password);
+        }
+
+
+        public void FirstNameInput()
+        {
+            Console.WriteLine("Enter First Name:");
+            FirstName = Console.ReadLine();
+        }
+
+        public void LastNameInput()
+        {
+            Console.WriteLine("Enter Last Name:");
+            FirstName = Console.ReadLine();
+        }
+
+        public void PasswordInput()
+        {
+            Console.WriteLine("Enter Password:");
+            Password = Console.ReadLine();
+            Console.WriteLine("Enter Password For Confirmation:");
+            if (Console.ReadLine() != Password) throw new FormatException("Passwords don't match.");
         }
         #endregion
     }

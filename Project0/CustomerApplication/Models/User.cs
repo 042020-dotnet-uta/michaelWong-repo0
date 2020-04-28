@@ -51,6 +51,14 @@ namespace CustomerApplication
             ID = id;
             Type = type;
         }
+        public User(String first, String last, String type, String password)
+        {
+            FirstName = first;
+            LastName = last;
+            Type = type;
+            Password = password;
+
+        }
         #endregion
 
         #region Methods
