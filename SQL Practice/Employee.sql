@@ -43,8 +43,14 @@ INSERT INTO [EmpDetails] ([Address1], [Address2], [City], [Country], [EmployeeId
 SELECT [Employee].[EmployeeId], [Employee].[LastName], [Employee].[FirstName], [Department].[Location]
 FROM [Employee] JOIN [Department] ON [Employee].[DeptID] = [Department].[DepartmentId]
 WHERE [Department].[Location] = N'Marketing';
+--report total salary of Marketing
+SELECT SUM([EmpDetails].[Salary]) AS MarketingSalary
+FROM [EmpDetails] JOIN [Employee] ON [Employee].[EmployeeId] = [EmpDetails].[EmployeeId]
+JOIN [Department] ON [Department].[DepartmentId] = [Employee].[DeptID]
+WHERE [Department].[Location] = N'Marketing'
+GROUP BY [Department].[DepartmentId];
 --report total employees by department
-SELECT [Department].[Location], COUNT([Employee].[EmployeeId])
+SELECT [Department].[Location], COUNT([Employee].[EmployeeId]) AS EmployeeCount
 FROM [Employee] JOIN [Department] ON [Employee].[DeptID] = [Department].[DepartmentId]
 GROUP BY [Department].[Location];
 --increase salary of Tina Smith to $90,000
