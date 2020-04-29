@@ -6,7 +6,7 @@ namespace CustomerApplication
     public class LocationBuilder
     {
         #region Fields
-        private static Regex NameRx = new Regex(@"^\w[\w\s\p{P}]*$");
+        private static Regex NameRx = new Regex(@"^\w[\w\s\p{P}]{0,49}$");
         private String _name;
         private String Name
         {
@@ -23,7 +23,7 @@ namespace CustomerApplication
         #endregion
 
         #region Methods
-        public Location BuildLocation()
+        public Location Build()
         {
             Console.WriteLine("Creating a New Location:\n");
             try
@@ -31,9 +31,9 @@ namespace CustomerApplication
                 NameInput();
                 using(var db = new CustomerApplicationContext())
                 {
-                    Location l = db.Locations.Add(new Location {Name = Name}).Entity;
+                    Location location = db.Locations.Add(new Location(Name)).Entity;
                     db.SaveChanges();
-                    return l;
+                    return location;
                 }
             }
             catch (Exception ex)
@@ -45,7 +45,7 @@ namespace CustomerApplication
 
         public void NameInput()
         {
-            Console.WriteLine("Enter Location Name:");
+            Console.Write("Enter Location Name:\n> ");
             Name = Console.ReadLine();
         }
         #endregion

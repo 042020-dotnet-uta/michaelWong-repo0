@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CustomerApplication
@@ -7,8 +6,8 @@ namespace CustomerApplication
     public class UserBuilder
     {
         #region Fields
-        private static Regex NameRx = new Regex(@"^([^\W\d]|\s)+$");
-        private static Regex PasswordRx = new Regex(@"^[\p{Lu}\p{Ll}\p{Nd}]{8,}$");
+        private static Regex NameRx = new Regex(@"^([^\W\d]|\s){1,50}$");
+        private static Regex PasswordRx = new Regex(@"^[\p{Lu}\p{Ll}\p{Nd}]{8,50}$");
         private String _firstName;
         private String FirstName
         {
@@ -45,35 +44,34 @@ namespace CustomerApplication
             set
             {
                 if (PasswordRx.IsMatch(value)) _password = value;
-                else throw new FormatException("Invalid password input. Must be at least 8 Latin alphabet characters or Arabic numbers.");
+                else throw new FormatException("Invalid password input. Must be at least 8 letters or numbers.");
             }
         }
         #endregion
 
-        #region Methods
-        public User BuildUser()
-        {
-            return this.BuildUser("customer");
-        }
+        #region Constructor
+        public UserBuilder() { }
+        #endregion
 
-        public User BuildUser(String type)
+        #region Methods
+        public User Build(int userTypeId)
         {
-            Console.WriteLine($"Creating a New ({type}) User:\n");
             try
             {
-                FirstNameInput();
-                LastNameInput();
-                PasswordInput();
-                using(var db = new CustomerApplicationContext())
+                using (var db = new CustomerApplicationContext())
                 {
-                    User u = db.Users.Add(new User {FirstName = FirstName, LastName = LastName, Password = Password, Type = type}).Entity;
+                    var userType = db.UserTypes.Find(userTypeId);
+                    Console.WriteLine($"Creating a New ({userType.Name}) User:\n");
+                    FirstNameInput();
+                    LastNameInput();
+                    PasswordInput();
+                    var user = db.Users.Add(new User(FirstName, LastName, Password, userType)).Entity;
                     db.SaveChanges();
-                    return u;
+                    return user;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine("\n" + ex.Message);
                 return null;
             }
         }
@@ -81,21 +79,21 @@ namespace CustomerApplication
 
         public void FirstNameInput()
         {
-            Console.WriteLine("Enter First Name:");
+            Console.Write("Enter First Name:\n> ");
             FirstName = Console.ReadLine();
         }
 
         public void LastNameInput()
         {
-            Console.WriteLine("Enter Last Name:");
+            Console.Write("Enter Last Name:\n> ");
             LastName = Console.ReadLine();
         }
 
         public void PasswordInput()
         {
-            Console.WriteLine("Enter Password:");
+            Console.Write("Enter Password:\n> ");
             Password = Console.ReadLine();
-            Console.WriteLine("Enter Password For Confirmation:");
+            Console.Write("Enter Password For Confirmation:\n> ");
             if (Console.ReadLine() != Password) throw new FormatException("Passwords don't match.");
         }
         #endregion

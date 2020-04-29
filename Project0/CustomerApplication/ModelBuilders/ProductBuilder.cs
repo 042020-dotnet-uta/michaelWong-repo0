@@ -7,7 +7,7 @@ namespace CustomerApplication
     {
         #region Fields
         private static Regex PriceRx = new Regex(@"^\d+\.\d{2}$");
-        private static Regex NameRx = new Regex(@"^[\w\s]+$");
+        private static Regex NameRx = new Regex(@"^[\w\s]{1,50}$");
         private String _name;
         private String Name
         {
@@ -34,47 +34,43 @@ namespace CustomerApplication
                 else throw new FormatException("Invalid product price input. Format: X.XX");
             }
         }
-        private long LocationID {get; set;}
         #endregion
 
         #region Constructor
-        public ProductBuilder(long locationID)
-        {
-            LocationID = locationID;
-        }
         #endregion
 
         #region Methods
-        public Product BuildProduct()
+        public Product Build(int locationId)
         {
-            Console.WriteLine("Creating a New Product\n");
             try
             {
-                NameInput();
-                PriceInput();
-                using(var db = new CustomerApplicationContext())
+                using (var db = new CustomerApplicationContext())
                 {
-                    Product p = db.Products.Add(new Product {Name = Name, Price = Price, Quantity = 0, LocationID = LocationID}).Entity;
+                    Console.WriteLine("Creating a New Product\n");
+                    NameInput();
+                    PriceInput();
+                    var location = db.Locations.Find(locationId);
+                    var product = db.Products.Add(new Product(Name, Price, location)).Entity;
                     db.SaveChanges();
-                    return p;
+                    return product;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("\n" + ex.Message);
+                Console.WriteLine("\n" + ex.InnerException.ToString());
                 return null;
             }
         }
 
         public void NameInput()
         {
-            Console.WriteLine("Enter Product Name:");
+            Console.Write("Enter Product Name:\n> ");
             Name = Console.ReadLine();
         }
 
         public void PriceInput()
         {
-            Console.WriteLine("Enter Product Price:");
+            Console.Write("Enter Product Price:\n> ");
             Price = Console.ReadLine();
         }
         #endregion

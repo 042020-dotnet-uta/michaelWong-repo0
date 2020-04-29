@@ -7,23 +7,21 @@ namespace CustomerApplication
 {
     public class Login
     {
-        #region Constructors
-        #endregion
-
         #region Methods
         public User PromptLogin()
         {
-            Console.WriteLine("Enter User ID:");
-            String id = Console.ReadLine();
-            Console.WriteLine("Enter Password:");
+            Console.Write("Login:\n\nEnter User ID:\n> ");
+            String inputId = Console.ReadLine();
+            Console.Write("Enter Password:\n> ");
             String password = Console.ReadLine();
-            //Send id and password to the database to see if user login is correct
-            //Users[] users = db.query something
             using(var db = new CustomerApplicationContext())
             {
                 try
                 {
-                    return db.Users.Single(u => u.ID == Int64.Parse(id) && u.Password == password);
+                    var id = Int32.Parse(inputId);
+                    return db.Users
+                        .Include(u => u.UserType)
+                        .Single(u => u.Id == id && u.Password == password);
                 }
                 catch
                 {

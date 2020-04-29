@@ -7,11 +7,11 @@ namespace CustomerApplication
         #region Fields
         public User User;
         public ICommands Commands;
-        public Location Location; //testing purposes
+        public Location Location;
         #endregion
 
         #region Constructors
-        public UserTerminal() { }
+        public UserTerminal(){}
         #endregion
 
         #region Methods
@@ -21,10 +21,9 @@ namespace CustomerApplication
             {
                 DisplayLogin();
             }
-            if (User.Type == "admin")
+            if (User.UserType.Name == "Admin")
             {
-                //Commands = new AdminCommands(this);
-                Commands = new AdminCommands(this); //For testing purposes
+                Commands = new AdminCommands(this);
             }
             else
             {
@@ -51,7 +50,7 @@ namespace CustomerApplication
                         PromptLogin();
                         break;
                     case 1:
-                        CreateNewUser("customer");
+                        CreateNewUser();
                         break;
                     default:
                         throw new FormatException();
@@ -60,7 +59,7 @@ namespace CustomerApplication
             catch
             {
                 Console.Clear();
-                Console.WriteLine("Invalid command. Press enter to continue");
+                Console.WriteLine("Invalid command. Press enter to continue.");
                 Console.ReadLine();
                 Console.Clear();
             }
@@ -69,17 +68,17 @@ namespace CustomerApplication
 
         public void PromptLogin()
         {
-            User u = new Login().PromptLogin();
+            User user = new Login().PromptLogin();
             Console.Clear();
-            if (u == null)
+            if (user == null)
             {
                 Console.WriteLine("Failed to login. Press enter to continue.");
             }
             else
             {
                 Console.WriteLine("Login successful. Press enter to continue.\n");
-                Console.WriteLine(u);
-                User = u;
+                Console.WriteLine(user);
+                User = user;
             }
             Console.ReadLine();
             Console.Clear();
@@ -87,10 +86,10 @@ namespace CustomerApplication
         #endregion
 
         #region CreationMethods
-        public void CreateNewUser(String type)
+        public void CreateNewUser()
         {
-            User u = new UserBuilder().BuildUser(type);
-            if (u == null)
+            User user = new UserBuilder().Build(2);
+            if (user == null)
             {
                 Console.WriteLine("Failed to create a new user. Press enter to continue.");
             }
@@ -98,47 +97,8 @@ namespace CustomerApplication
             {
                 Console.Clear();
                 Console.WriteLine("New user created. Use id and password to sign in.\n");
-                Console.WriteLine(u);
+                Console.WriteLine(user);
                 Console.WriteLine("\nPress enter to continue.");
-            }
-            Console.ReadLine();
-            Console.Clear();
-        }
-
-        public void CreateLocation()
-        {
-            Location l = new LocationBuilder().BuildLocation();
-            if (l == null)
-            {
-                Console.WriteLine("Failed to create a new location. Press enter to continue.");
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("New location created.\n");
-                Console.WriteLine(l);
-                Console.WriteLine("\nPress enter to continue");
-            }
-            Console.ReadLine();
-            Console.Clear();
-
-            //TESTING PURPOSES
-            Location = l;
-        }
-
-        public void CreateProduct()
-        {
-            Product p = new ProductBuilder(Location.ID).BuildProduct();
-            if (p == null)
-            {
-                Console.WriteLine("Failed to create a new product. Press enter to continue.");
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("New product created.\n");
-                Console.WriteLine(p);
-                Console.WriteLine("\nPress enter to continue");
             }
             Console.ReadLine();
             Console.Clear();

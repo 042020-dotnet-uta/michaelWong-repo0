@@ -52,12 +52,14 @@ namespace CustomerApplication
                 try
                 {
                     int input = Int32.Parse(Console.ReadLine());
-                    Console.Clear();
+                    //Console.Clear();
                     CommandsMain[input]();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    CommandError();
+                    Console.WriteLine(ex.Message);
+                    Console.ReadLine();
+                    //CommandError();
                 }
             }
             else
@@ -86,28 +88,50 @@ namespace CustomerApplication
         {
             Console.WriteLine("Logging out...\n");
             UI.User = null;
-            Console.WriteLine("Press enter to exit.");
-            Console.ReadLine();
-            Console.Clear();
+            Continue();
         }
 
         public void ViewProfile()
         {
             Console.WriteLine(UI.User + "\n");
-            Console.WriteLine("Press enter to continue");
-            Console.ReadLine();
-            Console.Clear();
+            Continue();
         }
 
         public void ViewOrderHistory()
         {
-            //TODO
+            using (var db = new CustomerApplicationContext())
+            {
+                try
+                {
+                    Console.WriteLine("Showing Order History:\n");
+                    var user = db.Users.Find(UI.User.Id);
+                    var orders = db.Orders
+                        .Where(order => order.User.Id == user.Id)
+                        .Include(order => order.Product)
+                        .ThenInclude(product => product.Location)
+                        .ToList();
+                    Console.WriteLine(orders.Count);
+                    foreach (var order in orders)
+                    {
+                        Console.WriteLine("In loop");
+                        Console.WriteLine(order);
+                    }
+                    Console.WriteLine();
+                    Continue();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.ReadLine();
+                    //CommandError();
+                }
+            }
         }
 
         public void ViewLocations()
         {
             Console.WriteLine("Choose a Location to View:\n");
-            Console.WriteLine("0: Return");
+            Console.WriteLine("0:\tReturn");
             using (var db = new CustomerApplicationContext())
             {
                 List<Location> locations = db.Locations
@@ -117,11 +141,11 @@ namespace CustomerApplication
                 {
                     Console.WriteLine(location);
                 }
-                Console.Write("\nEnter Location ID:\n> ");
+                Console.Write("\nEnter Location Id:\n> ");
 
                 try
                 {
-                    var input = Int64.Parse(Console.ReadLine());
+                    var input = Int32.Parse(Console.ReadLine());
                     Console.Clear();
                     if (input == 0)
                     {
@@ -143,51 +167,48 @@ namespace CustomerApplication
         {
             Console.WriteLine("Going back to main menu...\n");
             UI.Location = null;
-            Console.WriteLine("Press enter to continue.");
-            Console.ReadLine();
-            Console.Clear();
+            Continue();
         }
 
         public void ViewInvetory()
         {
             CurrentLocation();
             DisplayInventory();
-            Console.WriteLine("\nPress enter to go back.");
-            Console.ReadLine();
-            Console.Clear();
+            Continue();
         }
 
         public void PlaceOrders()
         {
             CurrentLocation();
-            Console.WriteLine("\n0: Return");
+            Console.WriteLine("\n0:\tReturn");
             DisplayInventory();
             Console.Write("\nExample: 142 12, 43 -20, 8890 30\nEnter ID Quantity of Products Separated By Commas:\n> ");
-            String input = Console.ReadLine();
-            Console.Clear();
-            if (input == "0")
-            {
-                GoBack();
-                return;
-            }
             using (var db = new CustomerApplicationContext())
             {
                 try
                 {
+                    var input = Console.ReadLine();
+                    Console.Clear();
+                    if (input == "0")
+                    {
+                        GoBack();
+                        return;
+                    }
+                    var user = db.Users.Find(UI.User.Id);
+                    var location = db.Locations.Find(UI.Location.Id);
                     foreach (var splitElement in input.Split(","))
                     {
                         var quants = splitElement.Trim().Split(" ");
-                        var id = Int64.Parse(quants[0]);
+                        var id = Int32.Parse(quants[0]);
                         var quant = Int32.Parse(quants[1]);
                         var product = db.Products.Find(id);
-                        if (product.LocationID != UI.Location.ID || (product.Quantity - quant) < 0) throw new Exception();
+                        if (product.Location.Id != location.Id || (product.Quantity - quant) < 0) throw new Exception("This threw.");
                         product.Quantity -= quant;
-                        db.Orders.Add(new Order() { Quantity = quant, Timestamp = DateTime.Now, UserID = UI.User.ID, ProductID = id });
+                        db.Orders.Add(new Order(user, product, quant));
                     }
                     db.SaveChanges();
-                    Console.WriteLine("Orders placed. Press enter to continue.");
-                    Console.ReadLine();
-                    Console.Clear();
+                    Console.WriteLine("Orders placed.");
+                    Continue();
                 }
                 catch
                 {
@@ -200,10 +221,10 @@ namespace CustomerApplication
         {
             using (var db = new CustomerApplicationContext())
             {
-                Console.WriteLine("ID:\tName (Quantity, Price)");
+                Console.WriteLine("Id:\tName (Quantity, Price)");
                 List<Product> products = db.Products
                     .AsNoTracking()
-                    .Where(p => p.LocationID == UI.Location.ID)
+                    .Where(product => product.Location.Id == UI.Location.Id)
                     .ToList();
                 foreach (Product product in products)
                 {
@@ -216,14 +237,20 @@ namespace CustomerApplication
         public void CommandError()
         {
             Console.Clear();
-            Console.WriteLine("Invalid command. Press enter to continue.");
-            Console.ReadLine();
-            Console.Clear();
+            Console.WriteLine("Invalid command.");
+            Continue();
         }
 
         public void CurrentLocation()
         {
             Console.WriteLine($"Current Location: {UI.Location}\n");
+        }
+
+        public void Continue()
+        {
+            Console.WriteLine("Press enter to continue.");
+            Console.ReadLine();
+            Console.Clear();
         }
         #endregion
     }

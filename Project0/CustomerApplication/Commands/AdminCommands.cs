@@ -32,48 +32,44 @@ namespace CustomerApplication
         }
 
         #region Main Menu
-        public void AddUser(String type)
+        public void AddUser(int userTypeId)
         {
-            User user = new UserBuilder().BuildUser(type);
+            User user = new UserBuilder().Build(userTypeId);
             if (user != null)
             {
                 Console.Clear();
                 Console.WriteLine("New user added.\n");
                 Console.WriteLine(user + "\n");
             }
-            Console.WriteLine("Press enter to continue.");
-            Console.ReadLine();
-            Console.Clear();
+            Continue();
         }
 
         public void AddAdmin()
         {
-            AddUser("admin");
+            AddUser(1);
         }
 
         public void AddCustomer()
         {
-            AddUser("customer");
+            AddUser(2);
         }
 
         public void AddLocation()
         {
-            Location location = new LocationBuilder().BuildLocation();
+            Location location = new LocationBuilder().Build();
             if (location != null)
             {
                 Console.Clear();
                 Console.WriteLine("New location added.\n");
                 Console.WriteLine(location + "\n");
             }
-            Console.WriteLine("Press enter to continue.");
-            Console.ReadLine();
-            Console.Clear();
+            Continue();
         }
 
         public void RemoveLocation()
         {
             Console.WriteLine("Removing a Location\n");
-            Console.WriteLine("0: Return");
+            Console.WriteLine("0:\tReturn");
             using (var db = new CustomerApplicationContext())
             {
                 var locations = db.Locations
@@ -86,7 +82,7 @@ namespace CustomerApplication
                 Console.Write("\nEnter Location ID:\n> ");
                 try
                 {
-                    var input = Int64.Parse(Console.ReadLine());
+                    var input = Int32.Parse(Console.ReadLine());
                     Console.Clear();
                     if (input == 0)
                     {
@@ -97,14 +93,13 @@ namespace CustomerApplication
                     {
                         var location = db.Locations.Find(input);
                         var products = db.Products
-                            .Where(p => p.LocationID == location.ID)
+                            .Where(p => p.Location.Id == location.Id)
                             .ToList();
                         db.Locations.Remove(location);
                         db.Products.RemoveRange(products);
                         db.SaveChanges();
-                        Console.WriteLine("Location and products removed. Press enter to continue.");
-                        Console.ReadLine();
-                        Console.Clear();
+                        Console.WriteLine("Location and products removed.");
+                        Continue();
                     }
                 }
                 catch
@@ -120,16 +115,14 @@ namespace CustomerApplication
         public void AddProduct()
         {
             CurrentLocation();
-            Product product = new ProductBuilder(UI.Location.ID).BuildProduct();
+            Product product = new ProductBuilder().Build(UI.Location.Id);
             if (product != null)
             {
                 Console.Clear();
                 Console.WriteLine("New product added.\n");
                 Console.WriteLine(product + "\n");
             }
-            Console.WriteLine("Press enter to continue.");
-            Console.ReadLine();
-            Console.Clear();
+            Continue();
         }
 
         public void RemoveProduct()
@@ -142,11 +135,20 @@ namespace CustomerApplication
             {
                 try
                 {
-                    var input = Int64.Parse(Console.ReadLine());
+                    var input = Int32.Parse(Console.ReadLine());
+                    if (input == 0)
+                    {
+                        GoBack();
+                        return;
+                    }
+                    Console.Clear();
+                    db.Locations.Find(UI.Location.Id);
                     var product = db.Products.Find(input);
-                    if (product.LocationID != UI.Location.ID) throw new Exception();
+                    if (product.Location.Id != UI.Location.Id) throw new Exception();
                     db.Products.Remove(product);
                     db.SaveChanges();
+                    Console.WriteLine("Product removed.");
+                    Continue();
                 }
                 catch
                 {
@@ -159,43 +161,41 @@ namespace CustomerApplication
         public void ManageInventory()
         {
             CurrentLocation();
-            Console.WriteLine("0: Return");
+            Console.WriteLine("0:\tReturn");
             DisplayInventory();
             Console.Write("\nExample: 142 12, 43 -20, 8890 30\nEnter ID Quantity of Products Separated By Commas:\n> ");
-            try
+            using (var db = new CustomerApplicationContext())
             {
-                var input = Console.ReadLine();
-                Console.Clear();
-                if (input == "0")
+                try
                 {
-                    GoBack();
-                    return;
-                }
-                else
-                {
-                    using (var db = new CustomerApplicationContext())
+                    var input = Console.ReadLine();
+                    if (input == "0")
                     {
-                        var splitInput = input.Split(",");
-                        foreach (var splitElement in splitInput)
-                        {
-                            var quants = splitElement.Trim().Split(" ");
-                            var id = Int64.Parse(quants[0]);
-                            var quant = Int32.Parse(quants[1]);
-                            var product = db.Products.Find(id);
-                            if (product.LocationID != UI.Location.ID || (product.Quantity + quant) < 0) throw new Exception();
-                            product.Quantity += quant;
-                        }
-                        db.SaveChanges();
-                        Console.WriteLine("Inventory Updated. Press enter to continue.");
-                        Console.ReadLine();
-                        Console.Clear();
+                        GoBack();
+                        return;
                     }
+                    Console.Clear();
+                    var splitInput = input.Split(",");
+                    foreach (var splitElement in splitInput)
+                    {
+                        var quants = splitElement.Trim().Split(" ");
+                        var id = Int32.Parse(quants[0]);
+                        var quant = Int32.Parse(quants[1]);
+                        var location = db.Locations.Find(UI.Location.Id);
+                        var product = db.Products.Find(id);
+                        if (product.Location.Id != location.Id || (product.Quantity + quant) < 0) throw new Exception();
+                        product.Quantity += quant;
+                    }
+                    db.SaveChanges();
+                    Console.WriteLine("Inventory Updated.");
+                    Continue();
+                }
+                catch
+                {
+                    CommandError();
                 }
             }
-            catch
-            {
-                CommandError();
-            }
+
         }
         #endregion
         #endregion

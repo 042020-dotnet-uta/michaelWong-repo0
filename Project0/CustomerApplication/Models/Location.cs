@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,17 +8,19 @@ namespace CustomerApplication
     public class Location
     {
         #region Fields
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public long ID {get; set;}
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id{get; set;}
+        [Required]
+        [MaxLength(50)]
         public String Name{get; set;}
+        public ICollection<Product> Products{get; set;}
         #endregion
 
         #region Constructors
-        public Location(){}
-        public Location(long id, String name)
+        private Location(){} //For Entity Framework
+        public Location(String name)
         {
-            ID = id;
             Name = name;
         }
         #endregion
@@ -25,7 +28,7 @@ namespace CustomerApplication
         #region Methods
         public override String ToString()
         {
-            return $"{ID}: {Name}";
+            return $"{Id}:\t{Name}";
         }
         #endregion
     }

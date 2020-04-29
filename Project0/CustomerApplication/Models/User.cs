@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,57 +8,40 @@ namespace CustomerApplication
     public class User
     {
         #region Fields
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public long ID{get; set;}
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id{get; set;}
+        [Required]
+        [MaxLength(50)]
         public String FirstName{get; set;}
+        [Required]
+        [MaxLength(50)]
         public String LastName{get; set;}
+        [Required]
+        [MaxLength(50)]
         public String Password{get; set;}
-        public String Type{get; set;}
+        [Required]
+        public UserType UserType{get; set;}
+        public ICollection<Order> Orders{get; set;}
         #endregion
 
         #region Constructors
-        public User(){}
-        public User(String first, String last, String type, String password)
+        private User(){} //For Entity Framework
+        public User(String firstName, String lastName, String password, UserType userType)
         {
-            FirstName = first;
-            LastName = last;
-            Type = type;
+            FirstName = firstName;
+            LastName = lastName;
             Password = password;
-
+            UserType = userType;
         }
         #endregion
 
         #region Methods
         public override String ToString()
         {
-            return $"User ID:\t{ID}\n"
+            return $"User Id:\t{Id}\n"
                 + $"Name:\t\t{FirstName} {LastName}\n"
-                + $"User Type:\t{Type}";
-        }
-        public String ChangeFirstName(String first)
-        {
-            try
-            {
-                FirstName = first;
-            }
-            catch (FormatException)
-            {
-                return "Invalid Input: Failed to changed first name.";
-            }
-            return "Successfully changed first name.";
-        }
-        public String ChangeLastName(String last)
-        {
-            try
-            {
-                LastName = last;
-            }
-            catch (FormatException)
-            {
-                return "Invalid Input: Unable to changed first name.";
-            }
-            return "Successfully changed last name.";
+                + $"User Type:\t{UserType.Name}";
         }
         #endregion
     }
