@@ -40,8 +40,14 @@ namespace CustomerApplication
                 Console.Clear();
                 Console.WriteLine("New user added.\n");
                 Console.WriteLine(user + "\n");
+                Continue();
             }
-            Continue();
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Failed to create new user.");
+                Continue();
+            }
         }
 
         public void AddAdmin()
@@ -68,7 +74,7 @@ namespace CustomerApplication
 
         public void RemoveLocation()
         {
-            Console.WriteLine("Removing a Location\n");
+            Console.WriteLine("Remove a Location (WARNING: Will remove products and order history):\n");
             Console.WriteLine("0:\tReturn");
             using (var db = new CustomerApplicationContext())
             {
@@ -92,11 +98,13 @@ namespace CustomerApplication
                     else
                     {
                         var location = db.Locations.Find(input);
+                        /*
                         var products = db.Products
                             .Where(p => p.Location.Id == location.Id)
                             .ToList();
+                        */
                         db.Locations.Remove(location);
-                        db.Products.RemoveRange(products);
+                        //db.Products.RemoveRange(products);
                         db.SaveChanges();
                         Console.WriteLine("Location and products removed.");
                         Continue();
@@ -128,7 +136,8 @@ namespace CustomerApplication
         public void RemoveProduct()
         {
             CurrentLocation();
-            Console.WriteLine("0: Return");
+            Console.WriteLine("Remove a Product (WARNING: Will remove order history):\n");
+            Console.WriteLine("0:\tReturn");
             DisplayInventory();
             Console.Write("\nEnter Product ID:\n> ");
             using (var db = new CustomerApplicationContext())

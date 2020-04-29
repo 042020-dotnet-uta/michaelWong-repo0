@@ -52,14 +52,12 @@ namespace CustomerApplication
                 try
                 {
                     int input = Int32.Parse(Console.ReadLine());
-                    //Console.Clear();
+                    Console.Clear();
                     CommandsMain[input]();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine(ex.Message);
-                    Console.ReadLine();
-                    //CommandError();
+                    CommandError();
                 }
             }
             else
@@ -93,7 +91,7 @@ namespace CustomerApplication
 
         public void ViewProfile()
         {
-            Console.WriteLine(UI.User + "\n");
+            Console.WriteLine("Viewing Profile:\n\n" + UI.User + "\n");
             Continue();
         }
 
@@ -113,17 +111,14 @@ namespace CustomerApplication
                     Console.WriteLine(orders.Count);
                     foreach (var order in orders)
                     {
-                        Console.WriteLine("In loop");
                         Console.WriteLine(order);
                     }
                     Console.WriteLine();
                     Continue();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine(ex.Message);
-                    Console.ReadLine();
-                    //CommandError();
+                    CommandError();
                 }
             }
         }
@@ -173,6 +168,7 @@ namespace CustomerApplication
         public void ViewInvetory()
         {
             CurrentLocation();
+            Console.WriteLine("Showing Inventory:\n");
             DisplayInventory();
             Continue();
         }
@@ -182,7 +178,7 @@ namespace CustomerApplication
             CurrentLocation();
             Console.WriteLine("\n0:\tReturn");
             DisplayInventory();
-            Console.Write("\nExample: 142 12, 43 -20, 8890 30\nEnter ID Quantity of Products Separated By Commas:\n> ");
+            Console.Write("\nExample: 42 12, 13 2, 889 3\nEnter ID Quantity of Products Separated By Commas:\n> ");
             using (var db = new CustomerApplicationContext())
             {
                 try
@@ -196,18 +192,23 @@ namespace CustomerApplication
                     }
                     var user = db.Users.Find(UI.User.Id);
                     var location = db.Locations.Find(UI.Location.Id);
+                    List<Order> ordersPlaced = new List<Order>();
                     foreach (var splitElement in input.Split(","))
                     {
                         var quants = splitElement.Trim().Split(" ");
                         var id = Int32.Parse(quants[0]);
                         var quant = Int32.Parse(quants[1]);
                         var product = db.Products.Find(id);
-                        if (product.Location.Id != location.Id || (product.Quantity - quant) < 0) throw new Exception("This threw.");
+                        if (product.Location.Id != location.Id || (product.Quantity - quant) < 0 || quant > 50) throw new Exception("This threw.");
                         product.Quantity -= quant;
-                        db.Orders.Add(new Order(user, product, quant));
+                        ordersPlaced.Add(db.Orders.Add(new Order(user, product, quant)).Entity);
                     }
                     db.SaveChanges();
                     Console.WriteLine("Orders placed.");
+                    foreach (var order in ordersPlaced)
+                    {
+                        Console.WriteLine(order);
+                    }
                     Continue();
                 }
                 catch
@@ -221,7 +222,6 @@ namespace CustomerApplication
         {
             using (var db = new CustomerApplicationContext())
             {
-                Console.WriteLine("Id:\tName (Quantity, Price)");
                 List<Product> products = db.Products
                     .AsNoTracking()
                     .Where(product => product.Location.Id == UI.Location.Id)
@@ -243,7 +243,7 @@ namespace CustomerApplication
 
         public void CurrentLocation()
         {
-            Console.WriteLine($"Current Location: {UI.Location}\n");
+            Console.WriteLine($"Current Location:\n{UI.Location}\n");
         }
 
         public void Continue()

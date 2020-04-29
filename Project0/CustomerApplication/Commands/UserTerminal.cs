@@ -38,7 +38,7 @@ namespace CustomerApplication
         #region Menus
         public void DisplayLogin()
         {
-            Console.WriteLine("0: Login\n1: New User");
+            Console.WriteLine("Login or Register:\n\n0: Login\n1: New User");
             try
             {
                 Console.Write("\n> ");
