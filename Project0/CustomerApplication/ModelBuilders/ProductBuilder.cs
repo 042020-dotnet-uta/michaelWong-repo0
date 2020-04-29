@@ -34,7 +34,7 @@ namespace CustomerApplication
                 else throw new FormatException("Invalid product price input. Format: X.XX");
             }
         }
-        private long LocationID{get;}
+        private long LocationID {get; set;}
         #endregion
 
         #region Constructor
@@ -47,50 +47,35 @@ namespace CustomerApplication
         #region Methods
         public Product BuildProduct()
         {
-            Console.WriteLine("Creating a new product:\n");
-            NameInput();
-            PriceInput();
-            return new Product(923748902734, LocationID, Name, Price, 0); 
+            Console.WriteLine("Creating a New Product\n");
+            try
+            {
+                NameInput();
+                PriceInput();
+                using(var db = new CustomerApplicationContext())
+                {
+                    Product p = db.Products.Add(new Product {Name = Name, Price = Price, Quantity = 0, LocationID = LocationID}).Entity;
+                    db.SaveChanges();
+                    return p;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\n" + ex.Message);
+                return null;
+            }
         }
 
-        public String NameInput()
+        public void NameInput()
         {
-            bool check = true;
-            do
-            {
-                try
-                {
-                    Console.WriteLine("Enter Product Name:");
-                    Name = Console.ReadLine();
-                    check = false;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message + "\n");
-                }
-            } while (check);
-            Console.WriteLine();
-            return Name;
+            Console.WriteLine("Enter Product Name:");
+            Name = Console.ReadLine();
         }
 
-        public String PriceInput()
+        public void PriceInput()
         {
-            bool check = true;
-            do
-            {
-                try
-                {
-                    Console.WriteLine("Enter Product Price:");
-                    Price = Console.ReadLine();
-                    check = false;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message + "\n");
-                }
-            } while (check);
-            Console.WriteLine();
-            return Price;
+            Console.WriteLine("Enter Product Price:");
+            Price = Console.ReadLine();
         }
         #endregion
     }

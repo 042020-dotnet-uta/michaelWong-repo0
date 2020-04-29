@@ -1,27 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CustomerApplication
 {
     public class Location
     {
         #region Fields
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public long ID {get; private set;}
-        private String _name;
-        public String Name
-        {
-            get
-            {
-                return _name;
-            }
-            private  set
-            {
-                _name = value;
-            }
-        }
-        //public ICollection<Product> Products{get;}
+        public long ID {get; set;}
+        public String Name{get; set;}
         #endregion
 
         #region Constructors
@@ -34,6 +23,10 @@ namespace CustomerApplication
         #endregion
 
         #region Methods
+        public override String ToString()
+        {
+            return $"{ID}: {Name}";
+        }
         #endregion
     }
 }

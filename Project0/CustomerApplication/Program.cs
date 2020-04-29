@@ -6,8 +6,10 @@ namespace CustomerApplication
     {
         static void Main(string[] args)
         {
+            //Console.ReadLine();
+            Console.Clear();
             UserTerminal ui = new UserTerminal();
-            new UserBuilder().BuildUser("admin");
+            ui.Run();
         }
     }
 }

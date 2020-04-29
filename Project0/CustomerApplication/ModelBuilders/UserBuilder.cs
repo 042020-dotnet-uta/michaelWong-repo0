@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CustomerApplication
@@ -57,19 +58,24 @@ namespace CustomerApplication
 
         public User BuildUser(String type)
         {
-            Console.WriteLine("Creating a New User:");
+            Console.WriteLine($"Creating a New ({type}) User:\n");
             try
             {
                 FirstNameInput();
                 LastNameInput();
                 PasswordInput();
+                using(var db = new CustomerApplicationContext())
+                {
+                    User u = db.Users.Add(new User {FirstName = FirstName, LastName = LastName, Password = Password, Type = type}).Entity;
+                    db.SaveChanges();
+                    return u;
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("\n" + ex.Message);
                 return null;
             }
-            return new User(FirstName, LastName, type, Password);
         }
 
 
@@ -82,7 +88,7 @@ namespace CustomerApplication
         public void LastNameInput()
         {
             Console.WriteLine("Enter Last Name:");
-            FirstName = Console.ReadLine();
+            LastName = Console.ReadLine();
         }
 
         public void PasswordInput()

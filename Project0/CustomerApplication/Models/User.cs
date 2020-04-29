@@ -1,56 +1,23 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CustomerApplication
 {
     public class User
     {
         #region Fields
-        private static Regex Rx = new Regex(@"^([^\W\d]|\s)+$");
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public long ID{get; private set;}
-        private String _firstName;
-        public String FirstName
-        {
-            get
-            {
-                return _firstName;
-            }
-            private set
-            {
-                if (Rx.IsMatch(value)) _firstName = value.Trim();
-                else throw new FormatException("Invalid first name input.");
-            }
-        }
-        private String _lastName;
-        public String LastName
-        {
-            get
-            {
-                return _lastName;
-            }
-            private set
-            {
-                if (Rx.IsMatch(value)) _lastName = value.Trim();
-                else throw new FormatException("Invalid last name input.");
-            }
-        }
-        public String Password{get; private set;}
-        public String Type{get; private set;}
-        //public ICollection<Order> Orders{get;}
+        public long ID{get; set;}
+        public String FirstName{get; set;}
+        public String LastName{get; set;}
+        public String Password{get; set;}
+        public String Type{get; set;}
         #endregion
 
         #region Constructors
         public User(){}
-        public User(String first, String last, long id, String type)
-        {
-            FirstName = first;
-            LastName = last;
-            ID = id;
-            Type = type;
-        }
         public User(String first, String last, String type, String password)
         {
             FirstName = first;
@@ -64,8 +31,9 @@ namespace CustomerApplication
         #region Methods
         public override String ToString()
         {
-            return $"Name:\t\t{FirstName} {LastName}\n" +
-                $"User ID:\t{ID}";
+            return $"User ID:\t{ID}\n"
+                + $"Name:\t\t{FirstName} {LastName}\n"
+                + $"User Type:\t{Type}";
         }
         public String ChangeFirstName(String first)
         {
