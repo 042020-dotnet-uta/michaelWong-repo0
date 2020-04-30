@@ -44,6 +44,7 @@ namespace CustomerApplication
         {
             if (UI.Location == null)
             {
+                Console.WriteLine("Main Menu:\n");
                 for (int i = 0; i < CommandsMain.Count; i++)
                 {
                     Console.WriteLine($"{i}:\t{CommandsMain[i].Method.Name}");
@@ -62,7 +63,7 @@ namespace CustomerApplication
             }
             else
             {
-                Console.WriteLine($"Current Location: {UI.Location}\n");
+                CurrentLocation();
                 for (int i = 0; i < CommandsLocation.Count; i++)
                 {
                     Console.WriteLine($"{i}:\t{CommandsLocation[i].Method.Name}");
@@ -108,7 +109,6 @@ namespace CustomerApplication
                         .Include(order => order.Product)
                         .ThenInclude(product => product.Location)
                         .ToList();
-                    Console.WriteLine(orders.Count);
                     foreach (var order in orders)
                     {
                         Console.WriteLine(order);
@@ -176,7 +176,7 @@ namespace CustomerApplication
         public void PlaceOrders()
         {
             CurrentLocation();
-            Console.WriteLine("\n0:\tReturn");
+            Console.WriteLine("0:\tReturn");
             DisplayInventory();
             Console.Write("\nExample: 42 12, 13 2, 889 3\nEnter ID Quantity of Products Separated By Commas:\n> ");
             using (var db = new CustomerApplicationContext())
@@ -187,7 +187,7 @@ namespace CustomerApplication
                     Console.Clear();
                     if (input == "0")
                     {
-                        GoBack();
+                        Continue();
                         return;
                     }
                     var user = db.Users.Find(UI.User.Id);
@@ -204,11 +204,12 @@ namespace CustomerApplication
                         ordersPlaced.Add(db.Orders.Add(new Order(user, product, quant)).Entity);
                     }
                     db.SaveChanges();
-                    Console.WriteLine("Orders placed.");
+                    Console.WriteLine("Orders placed.\n");
                     foreach (var order in ordersPlaced)
                     {
                         Console.WriteLine(order);
                     }
+                    Console.WriteLine();
                     Continue();
                 }
                 catch

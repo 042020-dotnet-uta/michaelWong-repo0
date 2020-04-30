@@ -29,6 +29,7 @@ namespace CustomerApplication
             CommandsLocation.Add(AddProduct);
             CommandsLocation.Add(RemoveProduct);
             CommandsLocation.Add(ManageInventory);
+            CommandsLocation.Add(ShowOrderHistory);
         }
 
         #region Main Menu
@@ -92,7 +93,7 @@ namespace CustomerApplication
                     Console.Clear();
                     if (input == 0)
                     {
-                        GoBack();
+                        Continue();
                         return;
                     }
                     else
@@ -147,7 +148,7 @@ namespace CustomerApplication
                     var input = Int32.Parse(Console.ReadLine());
                     if (input == 0)
                     {
-                        GoBack();
+                        Continue();
                         return;
                     }
                     Console.Clear();
@@ -180,7 +181,7 @@ namespace CustomerApplication
                     var input = Console.ReadLine();
                     if (input == "0")
                     {
-                        GoBack();
+                        Continue();
                         return;
                     }
                     Console.Clear();
@@ -207,6 +208,38 @@ namespace CustomerApplication
 
         }
         #endregion
+
+        public void ShowOrderHistory()
+        {
+            CurrentLocation();
+            Console.WriteLine("Showing Order History:\n");
+            using (var db = new CustomerApplicationContext())
+            {
+                try
+                {
+                    var location = db.Locations.Find(UI.Location.Id);
+                    var products = db.Products
+                        .Where(product => product.Location.Id == location.Id)
+                        .ToList();
+                    var orders = db.Orders
+                        .Where(order => order.Product.Location.Id == location.Id)
+                        .ToList();
+                    foreach (var order in orders)
+                    {
+                        Console.WriteLine(order);
+                    }
+                    Console.WriteLine();
+                    Continue();
+                }
+                catch (Exception ex)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Unable to load order history. " + ex.Message);
+                    Continue();
+
+                }
+            }
+        }
         #endregion
     }
 }
