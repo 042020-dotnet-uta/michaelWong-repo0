@@ -23,20 +23,6 @@ namespace CustomerApplication
                 db.SaveChanges();
             }
             */
-            /*
-            using(var db = new CustomerApplicationContext())
-            {
-                Location location = db.Locations.Find(1);
-                Console.WriteLine(location);
-                var product = new Product("Something", "1.00", location);
-                Console.WriteLine(product);
-                db.Locations.Add(location);
-                db.SaveChanges();
-                db.Products.Add(product);
-                db.SaveChanges();
-            }
-            */
-
         }
     }
 }

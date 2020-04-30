@@ -1,8 +1,12 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// The <c>AdminCommands</c> class.
+/// Implements the <c>ICommands</c> interface.
+/// Contains all business logic for commands issued by an Admin user.
+/// </summary>
 namespace CustomerApplication
 {
     public class AdminCommands : CustomerCommands
@@ -16,6 +20,10 @@ namespace CustomerApplication
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Adds methods to <c>CommandsMain</c> which the user will have access to in the main menu.
+        /// Adds the admin commands to the <c>CommandsMain</c>.
+        /// </summary>
         public new void GetCommandsMain()
         {
             CommandsMain.Add(AddAdmin);
@@ -24,6 +32,10 @@ namespace CustomerApplication
             CommandsMain.Add(RemoveLocation);
         }
 
+        /// <summary>
+        /// Adds methods to <c>CommandsLocation</c> which the user will have access to in the location menu.
+        /// Adds the admin commands to the <c>CommandsLocation</c>.
+        /// </summary>
         public new void GetCommandsLocation()
         {
             CommandsLocation.Add(AddProduct);
@@ -33,9 +45,17 @@ namespace CustomerApplication
         }
 
         #region Main Menu
+        /// <summary>
+        /// Creates a new instance of <c>UserBuilder</c> to insert a new user into the database.
+        /// Method is called from <c>AddAdmin</c> and <c>AddCustomer</c>.
+        /// </summary>
+        /// <param name="userTypeId">An int which corresponds to the Id of UserType in the database.</param>
         public void AddUser(int userTypeId)
         {
+            //New instance of UserBuilder. UserTypeId determines the UserType of the new user.
             User user = new UserBuilder().Build(userTypeId);
+
+            //No user inserted into the database.
             if (user != null)
             {
                 Console.Clear();
@@ -43,6 +63,7 @@ namespace CustomerApplication
                 Console.WriteLine(user + "\n");
                 Continue();
             }
+            //User inserted into the database.
             else
             {
                 Console.Clear();
@@ -51,19 +72,30 @@ namespace CustomerApplication
             }
         }
 
+        /// <summary>
+        /// <c>AddUser</c> method call with Id=1 for a new Admin.
+        /// </summary>
         public void AddAdmin()
         {
             AddUser(1);
         }
 
+        /// <summary>
+        /// <c>AddUser</c> method call with Id=2 for a new Customer.
+        /// </summary>
         public void AddCustomer()
         {
             AddUser(2);
         }
 
+        /// <summary>
+        /// Creates a new instance of <c>LocationBuilder</c> to insert a new location into the database.
+        /// </summary>
         public void AddLocation()
         {
+            //New instance of LocationBuilder. Returns instance of Location.
             Location location = new LocationBuilder().Build();
+            //Location inserted into the database.
             if (location != null)
             {
                 Console.Clear();
@@ -73,12 +105,16 @@ namespace CustomerApplication
             Continue();
         }
 
+        /// <summary>
+        /// Displays all locations in the database. Accepts console input to delete a location from the database.
+        /// </summary>
         public void RemoveLocation()
         {
             Console.WriteLine("Remove a Location (WARNING: Will remove products and order history):\n");
             Console.WriteLine("0:\tReturn");
             using (var db = new CustomerApplicationContext())
             {
+                //Loads locations from database.
                 var locations = db.Locations
                     .AsNoTracking()
                     .ToList();
@@ -89,8 +125,11 @@ namespace CustomerApplication
                 Console.Write("\nEnter Location ID:\n> ");
                 try
                 {
+                    //Console input for Location Id.
                     var input = Int32.Parse(Console.ReadLine());
                     Console.Clear();
+
+                    //0: Return
                     if (input == 0)
                     {
                         Continue();
@@ -98,14 +137,9 @@ namespace CustomerApplication
                     }
                     else
                     {
+                        //Deletes location from database.
                         var location = db.Locations.Find(input);
-                        /*
-                        var products = db.Products
-                            .Where(p => p.Location.Id == location.Id)
-                            .ToList();
-                        */
                         db.Locations.Remove(location);
-                        //db.Products.RemoveRange(products);
                         db.SaveChanges();
                         Console.WriteLine("Location and products removed.");
                         Continue();
@@ -121,10 +155,17 @@ namespace CustomerApplication
         #endregion
 
         #region Location Menu
+        /// <summary>
+        /// Create a new instance of <c>ProductBuilder</c> to insert a new product into the database.
+        /// </summary>
         public void AddProduct()
         {
             CurrentLocation();
+
+            //New instance of ProductBuilder. Returns a Product instance which references the current location.
             Product product = new ProductBuilder().Build(UI.Location.Id);
+
+            //Product inserted into database.
             if (product != null)
             {
                 Console.Clear();
@@ -134,6 +175,9 @@ namespace CustomerApplication
             Continue();
         }
 
+        /// <summary>
+        /// Displays all products in the location. Accepts console input to delete a product from the database.
+        /// </summary>
         public void RemoveProduct()
         {
             CurrentLocation();
@@ -145,16 +189,27 @@ namespace CustomerApplication
             {
                 try
                 {
+                    //Console input.
                     var input = Int32.Parse(Console.ReadLine());
+
+                    //0: Return
                     if (input == 0)
                     {
                         Continue();
                         return;
                     }
                     Console.Clear();
+
+                    //Load current location from database.
                     db.Locations.Find(UI.Location.Id);
+
+                    //Load product which match the input.
                     var product = db.Products.Find(input);
+
+                    //Checks the product reference the current location.
                     if (product.Location.Id != UI.Location.Id) throw new Exception();
+
+                    //Deletes product from current location.
                     db.Products.Remove(product);
                     db.SaveChanges();
                     Console.WriteLine("Product removed.");
@@ -168,31 +223,50 @@ namespace CustomerApplication
             }
         }
 
+        /// <summary>
+        /// Displays all products in the location's inventory. Accepts console input to manage product quantities.
+        /// Product quantities can be increased or decreased according to input.
+        /// </summary>
+        /// <example>
+        /// Example input:
+        /// [Id] [Quantity], [Id] [Quantity], . . .
+        /// 15 12, 301 -20, 400 30
+        /// Increase quantity of product 15 by 12. Decrease quantity of product 301 by 20. Increase quantity of product 400 by 30.
+        /// </example>
         public void ManageInventory()
         {
             CurrentLocation();
             Console.WriteLine("0:\tReturn");
             DisplayInventory();
-            Console.Write("\nExample: 142 12, 43 -20, 8890 30\nEnter ID Quantity of Products Separated By Commas:\n> ");
+            Console.Write("\nExample: 142 12, 43 -20, 8890 30\nEnter [Id] [Quantity] of Products Separated By Commas:\n> ");
             using (var db = new CustomerApplicationContext())
             {
                 try
                 {
+                    //Console input.
                     var input = Console.ReadLine();
+
+                    //0: Return
                     if (input == "0")
                     {
                         Continue();
                         return;
                     }
                     Console.Clear();
+
+                    //Parses console input.
                     var splitInput = input.Split(",");
                     foreach (var splitElement in splitInput)
                     {
                         var quants = splitElement.Trim().Split(" ");
                         var id = Int32.Parse(quants[0]);
                         var quant = Int32.Parse(quants[1]);
+
+                        //Load location and products from database.
                         var location = db.Locations.Find(UI.Location.Id);
                         var product = db.Products.Find(id);
+
+                        //Checks all products reference the current location.
                         if (product.Location.Id != location.Id || (product.Quantity + quant) < 0) throw new Exception();
                         product.Quantity += quant;
                     }
@@ -209,6 +283,9 @@ namespace CustomerApplication
         }
         #endregion
 
+        /// <summary>
+        /// Displays all orders in the database corresponding to products in the current location.
+        /// </summary>
         public void ShowOrderHistory()
         {
             CurrentLocation();
@@ -217,13 +294,20 @@ namespace CustomerApplication
             {
                 try
                 {
+                    //Load location from database.
                     var location = db.Locations.Find(UI.Location.Id);
+
+                    //Load products from database which reference the location.
                     var products = db.Products
                         .Where(product => product.Location.Id == location.Id)
                         .ToList();
+                    
+                    //Load orders from database which reference the location's products.
                     var orders = db.Orders
                         .Where(order => order.Product.Location.Id == location.Id)
                         .ToList();
+                    
+                    //Display orders.
                     foreach (var order in orders)
                     {
                         Console.WriteLine(order);

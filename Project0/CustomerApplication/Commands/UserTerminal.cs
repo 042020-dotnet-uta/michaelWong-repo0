@@ -1,109 +1,54 @@
-using System;
-
+/// <summary>
+/// The <c>UserTerminal<c> class.
+/// Controls the loop for handling displaying menus and accepting console input.
+/// Contains fields for <c>User</c> and <c>Location</c> information.
+/// </summary>
 namespace CustomerApplication
 {
     public class UserTerminal
     {
         #region Fields
         public User User;
-        public ICommands Commands;
         public Location Location;
         #endregion
 
-        #region Constructors
-        public UserTerminal(){}
-        #endregion
-
         #region Methods
+        /// <summary>
+        /// Method that controls and the main <c>UserTerminal</c> Loop.
+        /// Displays the Login menu until a user is logged in.
+        /// Displays the Command menu for the appropriate <c>UserType</c> when a user is logged in.
+        /// </summary>
         public void Run()
         {
+            //New instance of Login.
+            Login login = new Login();
             while (User == null)
             {
-                DisplayLogin();
+                //Displays login menu until a user is logged in.
+                User = login.DisplayLogin();
             }
+
+            //Commands stores all commands accessible for the user.
+            ICommands Commands;
+
+            //User has access to Admin commands.
             if (User.UserType.Name == "Admin")
             {
                 Commands = new AdminCommands(this);
             }
+            
+            //Customer user.
             else
             {
                 Commands = new CustomerCommands(this);
             }
+            
+            //User != null while User is logged in.
             while (User != null)
             {
                 Commands.DisplayCommands();
             }
         }
-
-        #region Menus
-        public void DisplayLogin()
-        {
-            Console.WriteLine("Login or Register:\n\n0: Login\n1: New User");
-            try
-            {
-                Console.Write("\n> ");
-                int input = Int32.Parse(Console.ReadLine());
-                Console.Clear();
-                switch (input)
-                {
-                    case 0:
-                        PromptLogin();
-                        break;
-                    case 1:
-                        CreateNewUser();
-                        break;
-                    default:
-                        throw new FormatException();
-                }
-            }
-            catch
-            {
-                Console.Clear();
-                Console.WriteLine("Invalid command. Press enter to continue.");
-                Console.ReadLine();
-                Console.Clear();
-            }
-
-        }
-
-        public void PromptLogin()
-        {
-            User user = new Login().PromptLogin();
-            Console.Clear();
-            if (user == null)
-            {
-                Console.WriteLine("Failed to login. Press enter to continue.");
-            }
-            else
-            {
-                Console.WriteLine("Login successful. Press enter to continue.\n");
-                Console.WriteLine(user);
-                User = user;
-            }
-            Console.ReadLine();
-            Console.Clear();
-        }
-        #endregion
-
-        #region CreationMethods
-        public void CreateNewUser()
-        {
-            User user = new UserBuilder().Build(2);
-            if (user == null)
-            {
-                Console.WriteLine("Failed to create a new user. Press enter to continue.");
-            }
-            else
-            {
-                Console.Clear();
-                Console.WriteLine("New user created. Use id and password to sign in.\n");
-                Console.WriteLine(user);
-                Console.WriteLine("\nPress enter to continue.");
-            }
-            Console.ReadLine();
-            Console.Clear();
-        }
-        #endregion
         #endregion
     }
 }
