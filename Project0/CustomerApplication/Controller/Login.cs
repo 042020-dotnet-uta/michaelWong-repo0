@@ -25,7 +25,7 @@ namespace CustomerApplication
             try
             {
                 //Console input.
-                Console.Write("\n>");
+                Console.Write("\n> ");
                 int input = Int32.Parse(Console.ReadLine());
                 Console.Clear();
                 switch (input)
