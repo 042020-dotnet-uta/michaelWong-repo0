@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace CustomerApplication
@@ -10,14 +11,16 @@ namespace CustomerApplication
         public DbSet<Product> Products {get; set;}
         public DbSet<Order> Orders{get; set;}
 
-        public CustomerApplicationContext(){}
+        public CustomerApplicationContext() : base(GetOptions()) {}
         public CustomerApplicationContext(DbContextOptions<CustomerApplicationContext> options) 
             : base(options){}
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        
+        private static DbContextOptions GetOptions()
         {
-            if (!optionsBuilder.IsConfigured) optionsBuilder.UseSqlServer(@"Server=DESKTOP-H1F3F9U\SQLEXPRESS;Database=CustomerApp;Trusted_Connection=True;");
+            var builder = new ConfigurationBuilder();
+            builder.AddJsonFile("appsettings.json", optional:false);
+            var configuration = builder.Build();
+            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), configuration.GetConnectionString("CustomerApplicationConnection")).Options;
         }
-
     }
 }
