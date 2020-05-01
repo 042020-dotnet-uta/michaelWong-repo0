@@ -7,21 +7,54 @@ namespace CustomerApplication
     public class Order
     {
         #region Fields
+        private int _id;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id{get; set;}
+        public int Id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        }
+        private int _quantity;
         [Required]
-        public int Quantity{get; set;}
+        public int Quantity
+        {
+            get
+            {
+                return _quantity;
+            }
+            set
+            {
+                _quantity = value;
+            }
+        }
+        private DateTime _timestamp;
         [Required]
-        public DateTime Timestamp{get; set;}
+        public DateTime Timestamp
+        {
+            get
+            {
+                return _timestamp;
+            }
+            set
+            {
+                _timestamp = value;
+            }
+        }
         [Required]
-        public User User{get; set;}
+        public User User { get; set; }
         [Required]
-        public Product Product{get; set;}
+        public Product Product { get; set; }
         #endregion
 
         #region Constructors
-        private Order(){} //For Entity Framework
+        private Order() { } //For Entity Framework
         public Order(User user, Product product, int quantity)
         {
             User = user;
