@@ -10,7 +10,14 @@ namespace CustomerApplication
         public DbSet<Product> Products {get; set;}
         public DbSet<Order> Orders{get; set;}
 
+        public CustomerApplicationContext(){}
+        public CustomerApplicationContext(DbContextOptions<CustomerApplicationContext> options) 
+            : base(options){}
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer(@"Server=DESKTOP-H1F3F9U\SQLEXPRESS;Database=CustomerApp;Trusted_Connection=True;");
+        {
+            if (!optionsBuilder.IsConfigured) optionsBuilder.UseSqlServer(@"Server=DESKTOP-H1F3F9U\SQLEXPRESS;Database=CustomerApp;Trusted_Connection=True;");
+        }
+
     }
 }
