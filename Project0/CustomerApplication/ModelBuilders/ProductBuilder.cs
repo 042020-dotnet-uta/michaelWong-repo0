@@ -40,6 +40,14 @@ namespace CustomerApplication
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Validates console input to instantiate a new product and insert it into the database.
+        /// </summary>
+        /// <param name="locationId">Id of location instance which the new product will reference.</param>
+        /// <returns>
+        /// null if console input fails validation.
+        /// Product object if new location inserted into database.
+        /// </returns>
         public Product Build(int locationId)
         {
             try
@@ -62,12 +70,22 @@ namespace CustomerApplication
             }
         }
 
+        /// <summary>
+        /// Gets console input for product name.
+        /// </summary>
         public void NameInput()
         {
             Console.Write("Enter Product Name:\n> ");
             Name = Console.ReadLine();
         }
 
+        /// <summary>
+        /// Gets console input for product price.
+        /// Format: X.XX.
+        /// </summary>
+        /// <example>
+        /// 1.00 15.50 190.99
+        /// </example>
         public void PriceInput()
         {
             Console.Write("Enter Product Price:\n> ");

@@ -23,6 +23,13 @@ namespace CustomerApplication
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Validates console input to instantiate a new location and insert it into the database.
+        /// </summary>
+        /// <returns>
+        /// null if console input fails validation.
+        /// Location object if new location inserted into database.
+        /// </returns>
         public Location Build()
         {
             Console.WriteLine("Creating a New Location:\n");
@@ -43,6 +50,9 @@ namespace CustomerApplication
             }
         }
 
+        /// <summary>
+        /// Gets console input for location name.
+        /// </summary>
         public void NameInput()
         {
             Console.Write("Enter Location Name:\n> ");

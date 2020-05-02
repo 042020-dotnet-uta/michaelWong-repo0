@@ -54,6 +54,13 @@ namespace CustomerApplication
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Validates console input to instantiate a new user and insert it into the database.
+        /// </summary>
+        /// <returns>
+        /// null if console input fails validation.
+        /// User object if new location inserted into database.
+        /// </returns>
         public User Build(int userTypeId)
         {
             try
@@ -76,19 +83,27 @@ namespace CustomerApplication
             }
         }
 
-
+        /// <summary>
+        /// Gets console input for user first name.
+        /// </summary>
         public void FirstNameInput()
         {
             Console.Write("Enter First Name:\n> ");
             FirstName = Console.ReadLine();
         }
 
+        /// <summary>
+        /// Gets console input for user last name.
+        /// </summary>
         public void LastNameInput()
         {
             Console.Write("Enter Last Name:\n> ");
             LastName = Console.ReadLine();
         }
 
+        /// <summary>
+        /// Gets console input for user password.
+        /// </summary>
         public void PasswordInput()
         {
             Console.Write("Enter Password:\n> ");
