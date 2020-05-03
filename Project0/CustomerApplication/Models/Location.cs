@@ -3,39 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CustomerApplication
+namespace CustomerApplication.Models
 {
     public class Location
     {
         #region Fields
-        private int _id;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
-        }
-        private String _name;
+        public int Id { get; set; }
         [Required]
         [MaxLength(50)]
-        public String Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
-        }
+        public String Name { get; set; }
         public ICollection<Product> Products { get; set; }
         #endregion
 

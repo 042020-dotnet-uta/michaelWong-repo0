@@ -1,14 +1,14 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using CustomerApplication.Models;
+using CustomerApplication.DbAccess;
 
 /// <summary>
 /// The <c>CustomerCommands</c> class.
 /// Implements the <c>ICommands</c> interface.
 /// Contains all business logic for commands issued by a Customer user.
 /// </summary>
-namespace CustomerApplication
+namespace CustomerApplication.Controllers
 {
     public class CustomerCommands : ICommands
     {
@@ -76,7 +76,7 @@ namespace CustomerApplication
                     Console.Clear();
                     CommandsMain[input]();
                 }
-                catch
+                catch (System.Exception)
                 {
                     CommandError();
                 }
@@ -98,7 +98,7 @@ namespace CustomerApplication
                     Console.Clear();
                     CommandsLocation[input]();
                 }
-                catch
+                catch (System.Exception)
                 {
                     CommandError();
                 }
@@ -132,32 +132,21 @@ namespace CustomerApplication
         /// </summary>
         public void ViewOrderHistory()
         {
-            using (var db = new CustomerApplicationContext())
+            try
             {
-                try
+                ICollection<Order> orderHistory = new OrderDb().GetUserHistory(UI.User.Id);
+                Console.WriteLine("Showing Order History\n");
+                foreach (var order in orderHistory)
                 {
-                    Console.WriteLine("Showing Order History:\n");
-
-                    //Load user from database.
-                    var user = db.Users.Find(UI.User.Id);
-
-                    //Load orders which reference the user.
-                    var orders = db.Orders
-                        .Where(order => order.User.Id == user.Id)
-                        .Include(order => order.Product)
-                        .ThenInclude(product => product.Location)
-                        .ToList();
-                    foreach (var order in orders)
-                    {
-                        Console.WriteLine(order);
-                    }
-                    Console.WriteLine();
-                    Continue();
+                    Console.WriteLine(order);
                 }
-                catch
-                {
-                    CommandError();
-                }
+                Console.WriteLine();
+                Continue();
+            }
+            catch (System.Exception)
+            {
+
+                CommandError();
             }
         }
 
@@ -168,39 +157,34 @@ namespace CustomerApplication
         /// </summary>
         public void ViewLocations()
         {
-            Console.WriteLine("Choose a Location to View:\n");
-            Console.WriteLine("0:\tReturn");
-            using (var db = new CustomerApplicationContext())
+            try
             {
-                //Loads Locations from database.
-                List<Location> locations = db.Locations
-                    .AsNoTracking()
-                    .ToList();
+                //Loads locations from database.
+                ICollection<Location> locations = new LocationDb().GetLocations();
+                Console.WriteLine("Choose a Location to View:\n");
+                Console.WriteLine("0:\tReturn");
                 foreach (Location location in locations)
                 {
                     Console.WriteLine(location);
                 }
                 Console.Write("\nEnter Location Id:\n> ");
-                try
-                {
-                    //Console input.
-                    var input = Int32.Parse(Console.ReadLine());
-                    Console.Clear();
 
-                    //0: Return
-                    if (input == 0)
-                    {
-                        GoBack();
-                        return;
-                    }
+                //Console input.
+                var input = Int32.Parse(Console.ReadLine());
+                Console.Clear();
 
-                    //Load location from database.
-                    UI.Location = db.Locations.Find(input);
-                }
-                catch
+                //0: Return
+                if (input == 0)
                 {
-                    CommandError();
+                    GoBack();
+                    return;
                 }
+                //Load location from database.
+                UI.Location = new LocationDb().GetLocation(input);
+            }
+            catch (System.Exception)
+            {
+                CommandError();
             }
         }
         #endregion
@@ -235,62 +219,38 @@ namespace CustomerApplication
         /// </summary>
         public void PlaceOrders()
         {
-            CurrentLocation();
-            Console.WriteLine("0:\tReturn");
-            DisplayInventory();
-            Console.Write("\nExample: 42 12, 13 2, 889 3\nEnter ID Quantity of Products Separated By Commas:\n> ");
-            using (var db = new CustomerApplicationContext())
+            try
             {
-                try
+                CurrentLocation();
+                Console.WriteLine("0:\tReturn");
+                DisplayInventory();
+                Console.Write("\nExample: 42 12, 13 2, 889 3\nEnter ID Quantity of Products Separated By Commas:\n> ");
+
+                //Console input.
+                var input = Console.ReadLine();
+                Console.Clear();
+
+                //0: Return
+                if (input == "0")
                 {
-                    //Console input.
-                    var input = Console.ReadLine();
-                    Console.Clear();
-                    
-                    //0: Return
-                    if (input == "0")
-                    {
-                        Continue();
-                        return;
-                    }
-
-                    //Loads current User and Location from database.
-                    var user = db.Users.Find(UI.User.Id);
-                    var location = db.Locations.Find(UI.Location.Id);
-
-                    //Store Order instances to be displayed after adding to database.
-                    List<Order> ordersPlaced = new List<Order>();
-                    foreach (var splitElement in input.Split(","))
-                    {
-
-                        //Parses console input.
-                        var quants = splitElement.Trim().Split(" ");
-                        var id = Int32.Parse(quants[0]);
-                        var quant = Int32.Parse(quants[1]);
-                        var product = db.Products.Find(id);
-
-                        //Checks Product references current Location and sufficient Quantity. Does not allow orders over 50 Quantity.
-                        if (product.Location.Id != location.Id || (product.Quantity - quant) < 0 || quant > 50) throw new Exception("This threw.");
-                        product.Quantity -= quant;
-
-                        //Creates new Product instance and inserts into the database.
-                        ordersPlaced.Add(db.Orders.Add(new Order(user, product, quant)).Entity);
-                    }
-                    db.SaveChanges();
-
-                    //Displays Order details.
-                    Console.WriteLine("Orders placed.\n");
-                    foreach (var order in ordersPlaced)
-                    {
-                        Console.WriteLine(order);
-                    }
-                    Console.WriteLine();
                     Continue();
+                    return;
                 }
-                catch
+                //Creates new order instances and inserts into database.
+                var ordersPlaced = new OrderDb().PlaceOrders(input, UI.User.Id, UI.Location.Id);
+
+                //Displays Order details.
+                Console.WriteLine("Orders placed.\n");
+                foreach (var order in ordersPlaced)
                 {
-                    CommandError();
+                    Console.WriteLine(order);
                 }
+                Console.WriteLine();
+                Continue();
+            }
+            catch (System.Exception)
+            {
+                CommandError();
             }
         }
 
@@ -299,17 +259,10 @@ namespace CustomerApplication
         /// </summary>
         public void DisplayInventory()
         {
-            using (var db = new CustomerApplicationContext())
+            ICollection<Product> products = new ProductDb().GetProducts(UI.Location.Id);
+            foreach (var product in products)
             {
-                //Load products from database which references the current location.
-                List<Product> products = db.Products
-                    .AsNoTracking()
-                    .Where(product => product.Location.Id == UI.Location.Id)
-                    .ToList();
-                foreach (Product product in products)
-                {
-                    Console.WriteLine(product);
-                }
+                Console.WriteLine(product);
             }
         }
         #endregion
@@ -320,7 +273,7 @@ namespace CustomerApplication
         public void CommandError()
         {
             Console.Clear();
-            Console.WriteLine("Invalid command.");
+            Console.WriteLine("An error occured.");
             Continue();
         }
 

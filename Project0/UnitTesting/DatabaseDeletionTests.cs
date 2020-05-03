@@ -1,6 +1,6 @@
 using System.Linq;
 using Xunit;
-using CustomerApplication;
+using CustomerApplication.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace UnitTesting

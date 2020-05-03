@@ -2,51 +2,18 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CustomerApplication
+namespace CustomerApplication.Models
 {
     public class Order
     {
         #region Fields
-        private int _id;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
-        }
-        private int _quantity;
+        public int Id { get; set; }
         [Required]
-        public int Quantity
-        {
-            get
-            {
-                return _quantity;
-            }
-            set
-            {
-                _quantity = value;
-            }
-        }
-        private DateTime _timestamp;
+        public int Quantity { get; set; }
         [Required]
-        public DateTime Timestamp
-        {
-            get
-            {
-                return _timestamp;
-            }
-            set
-            {
-                _timestamp = value;
-            }
-        }
+        public DateTime Timestamp { get; set; }
         [Required]
         public User User { get; set; }
         [Required]

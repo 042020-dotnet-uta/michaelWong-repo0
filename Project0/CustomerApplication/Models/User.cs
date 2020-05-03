@@ -3,67 +3,23 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CustomerApplication
+namespace CustomerApplication.Models
 {
     public class User
     {
         #region Fields
-        private int _id;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value;
-            }
-        }
-        private String _firstName;
+        public int Id { get; set; }
         [Required]
         [MaxLength(50)]
-        public String FirstName
-        {
-            get
-            {
-                return _firstName;
-            }
-            set
-            {
-                _firstName = value;
-            }
-        }
-        private String _lastName;
+        public String FirstName { get; set; }
         [Required]
         [MaxLength(50)]
-        public String LastName
-        {
-            get
-            {
-                return _lastName;
-            }
-            set
-            {
-                _lastName = value;
-            }
-        }
-        private String _password;
+        public String LastName { get; set; }
         [Required]
         [MaxLength(50)]
-        public String Password
-        {
-            get
-            {
-                return _password;
-            }
-            set
-            {
-                _password = value;
-            }
-        }
+        public String Password { get; set; }
         [Required]
         public UserType UserType { get; set; }
         public ICollection<Order> Orders { get; set; }

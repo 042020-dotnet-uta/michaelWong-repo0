@@ -3,7 +3,9 @@
 /// Controls the loop for handling displaying menus and accepting console input.
 /// Contains fields for <c>User</c> and <c>Location</c> information.
 /// </summary>
-namespace CustomerApplication
+using CustomerApplication.Models;
+
+namespace CustomerApplication.Controllers
 {
     public class UserTerminal
     {

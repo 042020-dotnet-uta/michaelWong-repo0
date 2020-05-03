@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace CustomerApplication
+namespace CustomerApplication.Models
 {
     public class CustomerApplicationContext : DbContext
     {

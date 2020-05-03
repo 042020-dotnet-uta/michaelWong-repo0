@@ -1,9 +1,13 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
+using CustomerApplication.Models;
 
-namespace CustomerApplication
+namespace CustomerApplication.DbAccess
 {
-    public class UserBuilder
+    public class UserDb
     {
         #region Fields
         private static Regex NameRx = new Regex(@"^([^\W\d]|\s){1,50}$");
@@ -49,10 +53,6 @@ namespace CustomerApplication
         }
         #endregion
 
-        #region Constructor
-        public UserBuilder() { }
-        #endregion
-
         #region Methods
         /// <summary>
         /// Validates console input to instantiate a new user and insert it into the database.
@@ -63,24 +63,18 @@ namespace CustomerApplication
         /// </returns>
         public User Build(int userTypeId)
         {
-            try
+            using (var db = new CustomerApplicationContext())
             {
-                using (var db = new CustomerApplicationContext())
-                {
-                    var userType = db.UserTypes.Find(userTypeId);
-                    Console.WriteLine($"Creating a New ({userType.Name}) User:\n");
-                    FirstNameInput();
-                    LastNameInput();
-                    PasswordInput();
-                    var user = db.Users.Add(new User(FirstName, LastName, Password, userType)).Entity;
-                    db.SaveChanges();
-                    return user;
-                }
+                var userType = db.UserTypes.Find(userTypeId);
+                Console.WriteLine($"Creating a New ({userType.Name}) User:\n");
+                FirstNameInput();
+                LastNameInput();
+                PasswordInput();
+                var user = db.Users.Add(new User(FirstName, LastName, Password, userType)).Entity;
+                db.SaveChanges();
+                return user;
             }
-            catch
-            {
-                return null;
-            }
+
         }
 
         /// <summary>
@@ -110,6 +104,28 @@ namespace CustomerApplication
             Password = Console.ReadLine();
             Console.Write("Enter Password For Confirmation:\n> ");
             if (Console.ReadLine() != Password) throw new FormatException("Passwords don't match.");
+        }
+
+        public User GetUser(int id)
+        {
+
+            using (var db = new CustomerApplicationContext())
+            {
+                return db.Users.Find(id);
+            }
+
+        }
+
+        public ICollection<User> GetUsers()
+        {
+
+            using (var db = new CustomerApplicationContext())
+            {
+                return db.Users
+                    .AsNoTracking()
+                    .ToList();
+            }
+
         }
         #endregion
     }

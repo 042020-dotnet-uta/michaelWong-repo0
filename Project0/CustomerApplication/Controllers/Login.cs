@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CustomerApplication.Models;
+using CustomerApplication.DbAccess;
 
 /// <summary>
 /// The <c>Login</c> class.
 /// Console input for User login or inserting new Customer users into the database.
 /// </summary>
-namespace CustomerApplication
+namespace CustomerApplication.Controllers
 {
     public class Login
     {
@@ -35,7 +37,8 @@ namespace CustomerApplication
                         User user = PromptLogin();
 
                         //Unsuccessful login.
-                        if(user == null) {
+                        if (user == null)
+                        {
                             Console.WriteLine("Login failed.\nPress any key to continue.");
                             Console.ReadLine();
                             Console.Clear();
@@ -52,7 +55,7 @@ namespace CustomerApplication
                             Console.Clear();
                             return user;
                         }
-                        
+
                     //Prompts user for new login information. Inserts a new user into the database.
                     case 1:
                         return CreateNewUser();
@@ -114,22 +117,23 @@ namespace CustomerApplication
         /// </returns>
         public User CreateNewUser()
         {
-            //New instance of UserBuilder. Returns user of Customer type.
-            User user = new UserBuilder().Build(2);
-
-            //No user inserted into the database.
-            if (user == null)
+            try
             {
-                Console.WriteLine("Failed to create a new user. Press enter to continue.");
-            }
+                //New instance of UserBuilder. Returns user of Customer type.
+                var user = new UserDb().Build(2);
 
-            //User inserted into the database.
-            else
-            {
+                //User inserted into the database.
                 Console.Clear();
                 Console.WriteLine("New user created. Use id and password to sign in.\n");
                 Console.WriteLine(user);
                 Console.WriteLine("\nPress enter to continue.");
+
+            }
+            catch (System.Exception ex)
+            {
+                Console.Clear();
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Failed to create a new user.\nPress enter to continue.");
             }
             Console.ReadLine();
             Console.Clear();
