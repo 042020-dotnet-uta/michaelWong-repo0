@@ -28,7 +28,7 @@ namespace CustomerApplication.DbAccess
                     var product = db.Products.Find(productId);
 
                     //Verifies Product references current Location and sufficient inventory.
-                    if (product.Location.Id != locationId || product.Quantity - orderQuantity < 0 || orderQuantity > 50 || orderQuantity < 0) throw new Exception();
+                    if (product.Location.Id != locationId || product.Quantity - orderQuantity < 0 || orderQuantity > 50 || orderQuantity <= 0) throw new Exception();
                     product.Quantity -= orderQuantity;
 
                     //Creates new Order instance and inserts into database.
@@ -74,6 +74,8 @@ namespace CustomerApplication.DbAccess
                 return db.Orders
                     .AsNoTracking()
                     .Where(order => order.Product.Location.Id == locationId)
+                    .Include(order => order.Product)
+                    .ThenInclude(product => product.Location)
                     .ToList();
             }
 

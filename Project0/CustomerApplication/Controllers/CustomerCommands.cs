@@ -209,6 +209,7 @@ namespace CustomerApplication.Controllers
             CurrentLocation();
             Console.WriteLine("Showing Inventory:\n");
             DisplayInventory();
+            Console.WriteLine();
             Continue();
         }
 
@@ -241,11 +242,13 @@ namespace CustomerApplication.Controllers
 
                 //Displays Order details.
                 Console.WriteLine("Orders placed.\n");
+                double total = 0;
                 foreach (var order in ordersPlaced)
                 {
+                    total += Double.Parse(order.Product.Price) * order.Quantity;
                     Console.WriteLine(order);
                 }
-                Console.WriteLine();
+                Console.WriteLine($"Total Price:\t${String.Format("{0:0.00}", total)}\n");
                 Continue();
             }
             catch (System.Exception)

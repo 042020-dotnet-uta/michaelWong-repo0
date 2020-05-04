@@ -88,6 +88,7 @@ namespace CustomerApplication.DbAccess
             {
                 var location = db.Locations.Find(locationId);
                 db.Locations.Remove(location);
+                db.SaveChanges();
                 return location;
             }
         }

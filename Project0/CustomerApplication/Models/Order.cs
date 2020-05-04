@@ -35,7 +35,7 @@ namespace CustomerApplication.Models
         public override String ToString()
         {
             return $"{Product.Location}\n"
-                + $"\t{Product.Id}: {Product.Name} ({Quantity}, {Product.Price})\n"
+                + $"\t{Product.Id}: {Product.Name} ({Quantity}, ${Product.Price})\n"
                 + $"\t{Timestamp}";
         }
         #endregion
