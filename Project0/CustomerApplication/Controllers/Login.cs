@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CustomerApplication.Models;
 using CustomerApplication.DbAccess;
 

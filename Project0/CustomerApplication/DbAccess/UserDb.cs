@@ -137,6 +137,18 @@ namespace CustomerApplication.DbAccess
                     .Single(user => user.Id == userIdInt && user.Password == password);
             }
         }
+
+        public ICollection<User> SearchByName(string firstName, string lastName)
+        {
+            using (var db = new CustomerApplicationContext())
+            {
+                return db.Users
+                    .AsNoTracking()
+                    .Where(user => user.FirstName == firstName && user.LastName == lastName)
+                    .Include(user => user.UserType)
+                    .ToList();
+            }
+        }
         #endregion
     }
 }

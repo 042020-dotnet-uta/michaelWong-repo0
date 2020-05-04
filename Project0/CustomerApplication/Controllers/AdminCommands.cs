@@ -29,6 +29,7 @@ namespace CustomerApplication.Controllers
         /// </summary>
         public new void GetCommandsMain()
         {
+            CommandsMain.Add(SearchCustomer);
             CommandsMain.Add(AddAdmin);
             CommandsMain.Add(AddCustomer);
             CommandsMain.Add(AddLocation);
@@ -48,6 +49,29 @@ namespace CustomerApplication.Controllers
         }
 
         #region Main Menu
+        public void SearchCustomer()
+        {
+            try
+            {
+                Console.Write("Enter User First Name:\n> ");
+                string firstName = Console.ReadLine();
+                Console.Write("Enter User Last Name:\n> ");
+                string lastName = Console.ReadLine();
+                Console.Clear();
+                var users = new UserDb().SearchByName(firstName, lastName);
+                Console.WriteLine("Displaying Found Users:\n");
+                foreach (var user in users)
+                {
+                    Console.WriteLine(user + "\n");
+                }
+                Continue();
+            }
+            catch (System.Exception)
+            {
+                CommandError();
+            }
+        }
+
         /// <summary>
         /// Creates a new instance of <c>UserBuilder</c> to insert a new user into the database.
         /// Method is called from <c>AddAdmin</c> and <c>AddCustomer</c>.
