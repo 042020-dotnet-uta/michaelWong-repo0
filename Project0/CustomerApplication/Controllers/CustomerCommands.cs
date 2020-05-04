@@ -13,9 +13,9 @@ namespace CustomerApplication.Controllers
     public class CustomerCommands : ICommands
     {
         #region Fields
-        public UserTerminal UI;
-        public List<Action> CommandsMain;
-        public List<Action> CommandsLocation;
+        public UserTerminal UI { get; set; }
+        public List<Action> CommandsMain { get; set; }
+        public List<Action> CommandsLocation { get; set; }
         #endregion
 
         #region Constructors
@@ -134,6 +134,7 @@ namespace CustomerApplication.Controllers
         {
             try
             {
+                //Loads orders from database.
                 ICollection<Order> orderHistory = new OrderDb().GetUserHistory(UI.User.Id);
                 Console.WriteLine("Showing Order History\n");
                 foreach (var order in orderHistory)

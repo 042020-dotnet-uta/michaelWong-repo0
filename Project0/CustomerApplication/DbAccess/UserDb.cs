@@ -5,12 +5,18 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using CustomerApplication.Models;
 
+/// <summary>
+/// Controls database access related to <c>User</c> objects.
+/// Used by classes in the business logic layer.
+/// </summary>
 namespace CustomerApplication.DbAccess
 {
     public class UserDb
     {
         #region Fields
+        //Used for name validation.
         private static Regex NameRx = new Regex(@"^([^\W\d]|\s){1,50}$");
+        //Used for password validation.
         private static Regex PasswordRx = new Regex(@"^[\p{Lu}\p{Ll}\p{Nd}]{8,50}$");
         private String _firstName;
         private String FirstName
@@ -106,6 +112,11 @@ namespace CustomerApplication.DbAccess
             if (Console.ReadLine() != Password) throw new FormatException("Passwords don't match.");
         }
 
+        /// <summary>
+        /// Loads <c>User</c> from database by id.
+        /// </summary>
+        /// <param name="id">Id of the user being loaded.</param>
+        /// <returns>User object.</returns>
         public User GetUser(int id)
         {
 
@@ -116,18 +127,12 @@ namespace CustomerApplication.DbAccess
 
         }
 
-        public ICollection<User> GetUsers()
-        {
-
-            using (var db = new CustomerApplicationContext())
-            {
-                return db.Users
-                    .AsNoTracking()
-                    .ToList();
-            }
-
-        }
-
+        /// <summary>
+        /// User login with id and password.
+        /// </summary>
+        /// <param name="userId">Id of the user logging in.</param>
+        /// <param name="password">Password of the user.</param>
+        /// <returns>User object if login successful.</returns>
         public User Login(String userId, String password)
         {
             using (var db = new CustomerApplicationContext())
@@ -138,6 +143,12 @@ namespace CustomerApplication.DbAccess
             }
         }
 
+        /// <summary>
+        /// Loads users from database that match input first name and last name.
+        /// </summary>
+        /// <param name="firstName">User first name for search.</param>
+        /// <param name="lastName">User last name for search.</param>
+        /// <returns>Collection of users matching search query.</param>
         public ICollection<User> SearchByName(string firstName, string lastName)
         {
             using (var db = new CustomerApplicationContext())

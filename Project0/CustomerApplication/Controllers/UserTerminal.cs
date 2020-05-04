@@ -10,8 +10,8 @@ namespace CustomerApplication.Controllers
     public class UserTerminal
     {
         #region Fields
-        public User User;
-        public Location Location;
+        public User User { get; set; }
+        public Location Location { get; set; }
         #endregion
 
         #region Methods

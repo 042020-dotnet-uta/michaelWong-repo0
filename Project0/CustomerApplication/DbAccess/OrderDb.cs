@@ -4,13 +4,25 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using CustomerApplication.Models;
 
+/// <summary>
+/// Controls database access related to <c>Order</c> objects.
+/// Used by classes in the business logic layer.
+/// </summary>
 namespace CustomerApplication.DbAccess
 {
     public class OrderDb
     {
+        /// <summary>
+        /// Creates new <c>Order</c> instances based on input.
+        /// Parses the input for <c>Product</c> <c>Id</c> and <c>Quantity</c>.
+        /// Decrements product quantities accordingly.
+        /// </summary>
+        /// <param name="input">The input string that will be parsed to create orders.</param>
+        /// <param name="userId">The id of the current user.</param>
+        /// <param name="locationId">The id of the current location.</param>
+        /// <returns>Collection of the new order instances.</returns>
         public ICollection<Order> PlaceOrders(string input, int userId, int locationId)
         {
-
             using (var db = new CustomerApplicationContext())
             {
                 //Loads current User and Location from database.
@@ -40,6 +52,11 @@ namespace CustomerApplication.DbAccess
 
         }
 
+        /// <summary>
+        /// Loads <c>Order</c> from database which references the <c>User</c>
+        /// </summary>
+        /// <param name="userId">The id of the user whose orders are being loaded.</param>
+        /// <returns>Collection of the user's orders.</returns>
         public ICollection<Order> GetUserHistory(int userId)
         {
 
@@ -56,6 +73,11 @@ namespace CustomerApplication.DbAccess
 
         }
 
+        /// <summary>
+        /// Loads <c>Order</c> from database which references the <c>Lcation</c>
+        /// </summary>
+        /// <param name="userId">The id of the location which orders are being loaded.</param>
+        /// <returns>Collection of the location's orders.</returns>
         public ICollection<Order> GetLocationHistory(int locationId)
         {
 

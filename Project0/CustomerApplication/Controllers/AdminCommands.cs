@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using CustomerApplication.Models;
 using CustomerApplication.DbAccess;
 
@@ -49,20 +47,37 @@ namespace CustomerApplication.Controllers
         }
 
         #region Main Menu
+        /// <summary>
+        /// Searches for users by console input.
+        /// Search by first name and last name.
+        /// Displays user details and order history.
+        /// </summary>
         public void SearchCustomer()
         {
             try
             {
+                //Console input.
                 Console.Write("Enter User First Name:\n> ");
                 string firstName = Console.ReadLine();
                 Console.Write("Enter User Last Name:\n> ");
                 string lastName = Console.ReadLine();
                 Console.Clear();
+
+                //Searches for users with inputted first name and last name.
                 var users = new UserDb().SearchByName(firstName, lastName);
                 Console.WriteLine("Displaying Found Users:\n");
                 foreach (var user in users)
                 {
-                    Console.WriteLine(user + "\n");
+                    //Displays user details.
+                    Console.WriteLine(user);
+
+                    //Loads orders references the user and displays.
+                    var orders = new OrderDb().GetUserHistory(user.Id);
+                    foreach (var order in orders)
+                    {
+                        Console.WriteLine(order);
+                    }
+                    Console.WriteLine();
                 }
                 Continue();
             }
@@ -73,7 +88,7 @@ namespace CustomerApplication.Controllers
         }
 
         /// <summary>
-        /// Creates a new instance of <c>UserBuilder</c> to insert a new user into the database.
+        /// Creates a new <c>User</c> and inserts into the database.
         /// Method is called from <c>AddAdmin</c> and <c>AddCustomer</c>.
         /// </summary>
         /// <param name="userTypeId">An int which corresponds to the Id of UserType in the database.</param>
@@ -81,7 +96,7 @@ namespace CustomerApplication.Controllers
         {
             try
             {
-                //New instance of UserBuilder. UserTypeId determines the UserType of the new user.
+                //New instance of UserDb. UserTypeId determines the UserType of the new user.
                 User user = new UserDb().Build(userTypeId);
                 Console.Clear();
                 Console.WriteLine("New user added.\n");
@@ -114,13 +129,13 @@ namespace CustomerApplication.Controllers
         }
 
         /// <summary>
-        /// Creates a new instance of <c>LocationBuilder</c> to insert a new location into the database.
+        /// Creates a new <c>Location</c> and inserts into the database.
         /// </summary>
         public void AddLocation()
         {
             try
             {
-                //New instance of LocationBuilder. Returns instance of Location.
+                //New instance of LocationDb. Returns instance of Location.
                 var location = new LocationDb().Build();
                 Console.Clear();
                 Console.WriteLine("New location added.\n");
@@ -136,7 +151,7 @@ namespace CustomerApplication.Controllers
         }
 
         /// <summary>
-        /// Displays all locations in the database. Accepts console input to delete a location from the database.
+        /// Displays all <c>Location</c> in the database. Accepts console input to delete a location from the database.
         /// </summary>
         public void RemoveLocation()
         {
@@ -177,14 +192,14 @@ namespace CustomerApplication.Controllers
 
         #region Location Menu
         /// <summary>
-        /// Create a new instance of <c>ProductBuilder</c> to insert a new product into the database.
+        /// Create a new <c>Product</c> and inserts into the database.
         /// </summary>
         public void AddProduct()
         {
             CurrentLocation();
             try
             {
-                //New instance of ProductBuilder. Returns a Product instance which references the current location.
+                //New instance of ProductDb. Returns a Product instance which references the current location.
                 Product product = new ProductDb().Build(UI.Location.Id);
                 Console.Clear();
                 Console.WriteLine("New product added.\n");
@@ -283,6 +298,8 @@ namespace CustomerApplication.Controllers
             {
                 CurrentLocation();
                 Console.WriteLine("Showing Order History:\n");
+                
+                //Loads orders from database.
                 foreach (var order in new OrderDb().GetLocationHistory(UI.Location.Id))
                 {
                     Console.WriteLine(order);

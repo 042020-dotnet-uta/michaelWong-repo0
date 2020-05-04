@@ -5,11 +5,16 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using CustomerApplication.Models;
 
+/// <summary>
+/// Controls database access related to <c>Location</c> objects.
+/// Used by classes in the business logic layer.
+/// </summary>
 namespace CustomerApplication.DbAccess
 {
     public class LocationDb
     {
         #region Fields
+        //Used for validation when inputting location names.
         private static Regex NameRx = new Regex(@"^\w[\w\s\p{P}]{0,49}$");
         private String _name;
         private String Name
@@ -70,6 +75,12 @@ namespace CustomerApplication.DbAccess
 
         }
 
+        /// <summary>
+        /// Loads all <c>Location</c> from the database.
+        /// </summary>
+        /// <returns>
+        /// Collection of <c>Location</c>.
+        /// </returns>
         public ICollection<Location> GetLocations()
         {
 
@@ -82,6 +93,12 @@ namespace CustomerApplication.DbAccess
 
         }
 
+        /// <summary>
+        /// Finds and removes a <c>Location</c> from the database.
+        /// Removes by Id.
+        /// </summary>
+        /// <param name="locationId">Id of the location object to be deleted from the database.</param>
+        /// <returns>Returns the Location object removed.</returns>
         public Location RemoveLocation(int locationId)
         {
             using (var db = new CustomerApplicationContext())

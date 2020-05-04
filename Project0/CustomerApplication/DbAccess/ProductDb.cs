@@ -5,12 +5,18 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using CustomerApplication.Models;
 
+/// <summary>
+/// Controls database access related to <c>Product</c> objects.
+/// Used by classes in the business logic layer.
+/// </summary>
 namespace CustomerApplication.DbAccess
 {
     public class ProductDb
     {
         #region Fields
+        //Used for price validation.
         private static Regex PriceRx = new Regex(@"^\d+\.\d{2}$");
+        //Used for name validation.
         private static Regex NameRx = new Regex(@"^[\w\s]{1,50}$");
         private String _name;
         private String Name
@@ -95,6 +101,11 @@ namespace CustomerApplication.DbAccess
             }
         }
 
+        /// <summary>
+        /// Loads all <c>Product</c> at <c>Location</c>.
+        /// </summary>
+        /// <param name="locationId">The id of the location being loaded.</param>
+        /// <returns>Collection of products.</returns>
         public ICollection<Product> GetProducts(int locationId)
         {
             using (var db = new CustomerApplicationContext())
@@ -107,8 +118,14 @@ namespace CustomerApplication.DbAccess
                     .ToList();
             }
         }
-        #endregion
 
+        /// <summary>
+        /// Finds and removes a <c>Product</c> from the database.
+        /// Removes by Id.
+        /// </summary>
+        /// <param name="productId">Id of the product object to be deleted from the database.</param>
+        /// <param name="locationId">Id of the current location, used for validation.</param>
+        /// <returns>Returns the Product object removed.</returns>
         public Product RemoveProduct(int productId, int locationId)
         {
             using (var db = new CustomerApplicationContext())
@@ -130,6 +147,13 @@ namespace CustomerApplication.DbAccess
 
         }
 
+        /// <summary>
+        /// Increments and decrements product quantities at the location.
+        /// Parses input string for <c>Product</c> <c>Id</c> and the amount that <c>Quantity</c> changes.
+        /// </summary>
+        /// <param name="input">Input string which will be parsed.</param>
+        /// <param name="locationId">Id of current location, used for validation.</param>
+        /// <returns>Collection of products updated.</returns>
         public ICollection<Product> UpdateInventory(string input, int locationId)
         {
 
@@ -156,5 +180,6 @@ namespace CustomerApplication.DbAccess
             }
 
         }
+        #endregion
     }
 }
