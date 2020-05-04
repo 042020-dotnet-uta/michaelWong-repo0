@@ -90,22 +90,14 @@ namespace CustomerApplication.Controllers
             String inputId = Console.ReadLine();
             Console.Write("Enter Password:\n> ");
             String password = Console.ReadLine();
-            using (var db = new CustomerApplicationContext())
+            Console.Clear();
+            try
             {
-                try
-                {
-                    //Tries to load user from database matching login information.
-                    var id = Int32.Parse(inputId);
-                    Console.Clear();
-                    return db.Users
-                        .Include(u => u.UserType)
-                        .Single(u => u.Id == id && u.Password == password);
-                }
-                catch
-                {
-                    Console.Clear();
-                    return null;
-                }
+                return new UserDb().Login(inputId, password);
+            }
+            catch (System.Exception)
+            {
+                return null;
             }
         }
 

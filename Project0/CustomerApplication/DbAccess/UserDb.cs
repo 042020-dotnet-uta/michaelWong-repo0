@@ -127,6 +127,16 @@ namespace CustomerApplication.DbAccess
             }
 
         }
+
+        public User Login(String userId, String password)
+        {
+            using (var db = new CustomerApplicationContext())
+            {
+                var userIdInt = Int32.Parse(userId);
+                return db.Users.Include(user => user.UserType)
+                    .Single(user => user.Id == userIdInt && user.Password == password);
+            }
+        }
         #endregion
     }
 }
