@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="HTMLFundamentalsStyle.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <img src="html5.png" style="width:50px;">
+    <h1>About</h1>
+    <p>Some text about this website</p>
+    <h1>Our Locations</h1>
+
+    <ul class="list">
+        <li class="list__item">USA
+            <ul class="list">
+                <li class="list__item"><a href="#">New York</a></li>
+                <li class="list__item"><a href="#">Columbus</a></li>
+                <li class="list__item"><a href="#">Austin</a></li>
+                <li class="list__item"><a href="#">Philly</a></li>
+            </ul>
+        </li>
+        <li class="list__item">World
+            <ul class="list">
+                <li class="list__item"><a href="#">Ottawa</a></li>
+                <li class="list__item"><a href="#">Sydney</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h1>Upcoming Classes</h1>
+    <table class="table" style="border:1px solid black;">
+        <thead class="thead">
+            <th style="border:1px solid black;">Location</th>
+            <th style="border:1px solid black;">Topic</th>
+        </thead>
+        <tbody class="tbody">
+            <tr>
+                <td style="border:1px solid black;">New York</td>
+                <td style="border:1px solid black;">Javascript & jQuery</td>
+            </tr>
+            <tr>
+                <td style="border:1px solid black;">Columbus</td>
+                <td style="border:1px solid black;">HTML & CSS</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Sign up!</h1>
+    <form class="sign-up-form" style="width:250px; clear:both;">
+
+        <label class="sign-up-form__label">Name:</label>
+        <input type="text" class="text sign-up-form__input"><br />
+
+        <label class="sign-up-form__label">Email:</label>
+        <input type="text" class="text sign-up-form__input"><br />
+
+        <label class="sign-up-form__label">Location:</label>
+        <select class="sign-up-form__select">
+            <option class="sign-up-form__option">New York</option>
+            <option class="sign-up-form__option">Columbus</option>
+        </select><br />
+
+        <fieldset>
+            <legend><label class="sign-up-form__label">Gender</label></legend>
+            <label class="sign-up-form__label">Male</label><input type="radio" name="gender" class="radio sign-up-form__input">
+            <label class="sign-up-form__label">Female</label><input type="radio" name="gender" class="radio sign-up-form__input">
+        </fieldset><br />
+        <label class="sign-up-form__label">Experience:</label><br />
+        <textarea class="sign-up-form__text-area" rows="4" cols="30"></textarea>
+
+        <button class="button sign-up-form__button">Sign Up</button>
+    </form>
+
+    <div class="footer">
+        <span class="footer__link"><a href="#">Twitter</a></span> |
+        <span class="footer__link"><a href="#">Facebook<a></span> |
+        <span class="footer__link"><a href="#">Flickr<a></span>
+    </div>
+
+</body>
+
+</html>

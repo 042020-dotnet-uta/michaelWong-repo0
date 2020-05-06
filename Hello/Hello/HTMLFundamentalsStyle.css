@@ -1,0 +1,10 @@
+.sign-up-form__label {
+    display: inline-block;
+    width: 15%;
+}
+.sign-up-form__input.text {
+    width: 80%;
+}
+.sign-up-form__label.radio {
+    display: inline;
+}
