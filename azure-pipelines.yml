@@ -14,12 +14,12 @@ stages:
     jobs:
       - job: 'build'
         steps:
-          - script: dotnet build 'project0/CustomerApplication/CustomerApplcation.csproj'
+          - script: 'dotnet build project0/CustomerApplication/CustomerApplcation.csproj'
       
       - job: 'test'
         dependsOn: 'build'
         steps:
-          - script: 'dotnet test'
+          - script: 'dotnet test project0/UnitTesting/UnitTesting.csproj'
 
       - job: 'publish'
         dependsOn: 'test'
