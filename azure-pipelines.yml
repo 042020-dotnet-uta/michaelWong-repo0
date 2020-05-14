@@ -14,7 +14,7 @@ stages:
     jobs:
       - job: 'build'
         steps:
-          - script: dotnet build 'project0/CustomerApplication/CustomerApplcation.csproj'
+          - script: dotnet build 'Project0/CustomerApplication/CustomerApplication.csproj'
       
       - job: 'test'
         dependsOn: 'build'
