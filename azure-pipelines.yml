@@ -20,8 +20,3 @@ stages:
         dependsOn: 'build'
         steps:
           - script: dotnet test 'Project0/UnitTesting/UnitTesting.csproj'
-
-      - job: 'publish'
-        dependsOn: 'test'
-        steps:
-          - script: 'dotnet publish'
